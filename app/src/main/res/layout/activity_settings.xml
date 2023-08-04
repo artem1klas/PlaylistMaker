@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/contur_margin"
+        android:layout_marginEnd="@dimen/contur_margin"
         android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginBottom="4dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
 
             <Button
                 android:id="@+id/settings_arrow_back"
@@ -27,47 +27,41 @@
                 android:background="@color/white"
                 app:backgroundTint="@color/white"
                 app:icon="@drawable/icon_arrow_back"
+                app:iconGravity="end"
+                app:iconSize="@dimen/icon_size"
                 app:iconTint="@color/black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="86dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="@dimen/contur_margin"
+                android:layout_marginBottom="@dimen/contur_margin"
                 android:text="@string/settings"
                 android:textColor="@color/black"
                 android:textSize="@dimen/title" />
-
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="18dp"
-            android:layout_marginBottom="21dp"
+            android:layout_marginTop="@dimen/contur_margin"
+            android:layout_marginBottom="@dimen/contur_margin"
             android:orientation="horizontal">
-            <androidx.appcompat.widget.SwitchCompat
+
+            <Switch
                 android:id="@+id/switchcompat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/dark_theme"
                 android:textSize="@dimen/text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="@dimen/contur_margin"
+            android:layout_marginBottom="@dimen/contur_margin"
             android:orientation="horizontal">
 
             <TextView
@@ -79,23 +73,22 @@
                 android:textSize="@dimen/text" />
 
             <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
                 android:layout_gravity="end"
                 android:background="@color/white"
                 app:backgroundTint="@color/white"
                 app:icon="@drawable/icon_share"
-                app:iconGravity="textEnd"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/icon_size"
                 app:iconTint="@color/gray" />
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="@dimen/contur_margin"
+            android:layout_marginBottom="@dimen/contur_margin"
             android:orientation="horizontal">
 
             <TextView
@@ -107,23 +100,22 @@
                 android:textSize="@dimen/text" />
 
             <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
                 android:layout_gravity="end"
                 android:background="@color/white"
                 app:backgroundTint="@color/white"
                 app:icon="@drawable/icon_support"
-                app:iconGravity="textEnd"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/icon_size"
                 app:iconTint="@color/gray" />
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginTop="@dimen/contur_margin"
+            android:layout_marginBottom="@dimen/contur_margin"
             android:orientation="horizontal">
 
             <TextView
@@ -135,16 +127,15 @@
                 android:textSize="@dimen/text" />
 
             <Button
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="@dimen/button_size"
                 android:layout_gravity="end"
                 android:background="@color/white"
                 app:backgroundTint="@color/white"
                 app:icon="@drawable/icon_arrow_forward"
-                app:iconGravity="textEnd"
-                app:iconPadding="12dp"
+                app:iconGravity="textStart"
+                app:iconSize="@dimen/icon_size"
                 app:iconTint="@color/gray" />
         </FrameLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
