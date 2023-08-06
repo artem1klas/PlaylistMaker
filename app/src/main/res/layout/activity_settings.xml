@@ -1,141 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/contur_margin"
+    android:paddingEnd="@dimen/contur_margin"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/contur_margin"
-        android:layout_marginEnd="@dimen/contur_margin"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/settings_arrow_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/icon_arrow_back"
+            app:iconGravity="end"
+            app:iconSize="@dimen/icon_size"
+            app:iconTint="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp">
-
-            <Button
-                android:id="@+id/settings_arrow_back"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:background="@color/white"
-                app:backgroundTint="@color/white"
-                app:icon="@drawable/icon_arrow_back"
-                app:iconGravity="end"
-                app:iconSize="@dimen/icon_size"
-                app:iconTint="@color/black" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="@dimen/contur_margin"
-                android:text="@string/settings"
-                android:textColor="@color/black"
-                android:textSize="@dimen/title" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contur_margin"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/contur_margin"
-            android:orientation="horizontal">
-
-            <Switch
-                android:id="@+id/switchcompat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dark_theme"
-                android:textSize="@dimen/text"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contur_margin"
-            android:layout_marginBottom="@dimen/contur_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:text="@string/share"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text" />
-
-            <Button
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:layout_gravity="end"
-                android:background="@color/white"
-                app:backgroundTint="@color/white"
-                app:icon="@drawable/icon_share"
-                app:iconGravity="textStart"
-                app:iconSize="@dimen/icon_size"
-                app:iconTint="@color/gray" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contur_margin"
-            android:layout_marginBottom="@dimen/contur_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:text="@string/call_support"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text" />
-
-            <Button
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:layout_gravity="end"
-                android:background="@color/white"
-                app:backgroundTint="@color/white"
-                app:icon="@drawable/icon_support"
-                app:iconGravity="textStart"
-                app:iconSize="@dimen/icon_size"
-                app:iconTint="@color/gray" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/contur_margin"
-            android:layout_marginBottom="@dimen/contur_margin"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:text="@string/user_agree"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text" />
-
-            <Button
-                android:layout_width="@dimen/button_size"
-                android:layout_height="@dimen/button_size"
-                android:layout_gravity="end"
-                android:background="@color/white"
-                app:backgroundTint="@color/white"
-                app:icon="@drawable/icon_arrow_forward"
-                app:iconGravity="textStart"
-                app:iconSize="@dimen/icon_size"
-                app:iconTint="@color/gray" />
-        </FrameLayout>
+            android:text="@string/settings"
+            android:textColor="@color/black"
+            android:textSize="@dimen/title" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contur_margin"
+        android:layout_marginBottom="@dimen/contur_margin"
+        android:orientation="horizontal">
+
+        <Switch
+            android:id="@+id/switchcompat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dark_theme"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contur_margin"
+        android:layout_marginBottom="@dimen/contur_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:text="@string/share"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text" />
+
+        <Button
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_gravity="end"
+            android:background="@color/white"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/icon_share"
+            app:iconGravity="textStart"
+            app:iconSize="@dimen/icon_size"
+            app:iconTint="@color/gray" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contur_margin"
+        android:layout_marginBottom="@dimen/contur_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:text="@string/call_support"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text" />
+
+        <Button
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_gravity="end"
+            android:background="@color/white"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/icon_support"
+            app:iconGravity="textStart"
+            app:iconSize="@dimen/icon_size"
+            app:iconTint="@color/gray" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/contur_margin"
+        android:layout_marginBottom="@dimen/contur_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:text="@string/user_agree"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text" />
+
+        <Button
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:layout_gravity="end"
+            android:background="@color/white"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/icon_arrow_forward"
+            app:iconGravity="textStart"
+            app:iconSize="@dimen/icon_size"
+            app:iconTint="@color/gray" />
+    </FrameLayout>
+</LinearLayout>
