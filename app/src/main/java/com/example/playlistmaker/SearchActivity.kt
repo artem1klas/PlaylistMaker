@@ -39,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 clearButton.visibility = clearButtonVisibility(p0)
+                textSearch = p0.toString()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -47,11 +48,6 @@ class SearchActivity : AppCompatActivity() {
         }
         searchButton.addTextChangedListener(searchTextWatcher)
     }
-    companion object {
-        const val TEXT_SEARCH = "TEXT_SEARCH"
-    }
-
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -69,6 +65,9 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+    companion object {
+        const val TEXT_SEARCH = "TEXT_SEARCH"
     }
 
 }
