@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <color name="color_main_color_background">#FF000000</color>
+        <color name="color_settings_color_background">#FF000000</color>
+        <color name="color_search_textColorHint">#FF000000</color>
+</resources>
