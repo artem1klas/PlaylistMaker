@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <color name="color_main_background">@color/black</color>
+        <color name="color_another_background">@color/black</color>
+        <color name="color_search_textColorHint">@color/black</color>
+</resources>
