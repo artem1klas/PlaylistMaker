@@ -10,4 +10,6 @@
     <color name="color_main_background">@color/blue</color>
     <color name="color_another_background">@color/white</color>
     <color name="color_search_textColorHint">@color/text_gray</color>
+    <color name="color_track_title">@color/black</color>
+    <color name="color_track_another">@color/text_gray</color>
 </resources>
