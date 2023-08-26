@@ -81,7 +81,6 @@
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:layout_gravity="end|center"
-        android:background="@color/color_another_background"
         app:backgroundTint="@color/color_another_background"
         app:icon="@drawable/icon_arrow_forward"
         app:iconGravity="textEnd"
