@@ -12,5 +12,7 @@
     <string name="https_offer">https://yandex.ru/legal/practicum_offer/</string>
     <string name="message_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
-    <string name="dot"> • </string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="update">Обновить</string>
+    <string name="problem_connect">Проблемы со связью\n\n Загрузка не удалась.Проверьте подключение к интернету</string>
 </resources>
