@@ -4,8 +4,9 @@
     <dimen name="text">19sp</dimen>
     <dimen name="button_radius">16dp</dimen>
     <dimen name="icon_size">24dp</dimen>
-    <dimen name="icon_padding_in_main">8dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
     <dimen name="button_margin_in_main">8dp</dimen>
     <dimen name="contur_margin">16dp</dimen>
     <dimen name="button_size">32dp</dimen>
+    <dimen name="track_image">45dp</dimen>
 </resources>
