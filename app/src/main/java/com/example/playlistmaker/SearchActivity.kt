@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -30,6 +31,7 @@ class SearchActivity : AppCompatActivity() {
     private val itunesService = retrofit.create(ITunesApi::class.java)
 
     private var textSearch = ""
+    private var lastInputText = ""
     private val adapter = TrackAdapter()
     private lateinit var trackList: RecyclerView
 
@@ -61,21 +63,21 @@ class SearchActivity : AppCompatActivity() {
         fun updateElementVisible(type: StatementType) {
             when (type) {
                 StatementType.SUCCESS -> {
-                    windowDisconnect.visibility = View.GONE
-                    windowNotFound.visibility = View.GONE
-                    windowTrackList.visibility = View.VISIBLE
+                    windowDisconnect.isVisible = false
+                    windowNotFound.isVisible = false
+                    windowTrackList.isVisible = true
                 }
 
                 StatementType.NOT_FOUND -> {
-                    windowDisconnect.visibility = View.GONE
-                    windowNotFound.visibility = View.VISIBLE
-                    windowTrackList.visibility = View.GONE
+                    windowDisconnect.isVisible = false
+                    windowNotFound.isVisible = true
+                    windowTrackList.isVisible = false
                 }
 
                 StatementType.NO_CONNECTION -> {
-                    windowDisconnect.visibility = View.VISIBLE
-                    windowNotFound.visibility = View.GONE
-                    windowTrackList.visibility = View.GONE
+                    windowDisconnect.isVisible = true
+                    windowNotFound.isVisible = false
+                    windowTrackList.isVisible = false
 
                 }
 
@@ -94,18 +96,19 @@ class SearchActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
         }
 
-        fun search() {
-            itunesService.search(queryInput.text.toString()).enqueue(object :
+        fun search(searchText: String) {
+            itunesService.search(searchText).enqueue(object :
                 Callback<TrackResponse> {
                 override fun onResponse(
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
+                    val responseBody = response.body()
                     if (response.code() == 200) {
                         adapter.tracks.clear()
 
-                        if (response.body()?.results?.isNotEmpty() == true) {
-                            adapter.tracks.addAll(response.body()?.results!!)
+                        if (responseBody?.results?.isNotEmpty() == true) {
+                            adapter.tracks.addAll(responseBody.results!!)
                             updateElementVisible(StatementType.SUCCESS)
                         } else if (adapter.tracks.isEmpty()) {
                             adapter.tracks.clear()
@@ -116,6 +119,7 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                     adapter.tracks.clear()
+                    lastInputText = queryInput.text.toString()
                     updateElementVisible(StatementType.NO_CONNECTION)
                 }
 
@@ -123,14 +127,14 @@ class SearchActivity : AppCompatActivity() {
         }
 
         updateButton.setOnClickListener {
-            search()
+            search(lastInputText)
         }
 
 
 
         queryInput.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                search()
+                search(queryInput.text.toString())
             }
             false
         }

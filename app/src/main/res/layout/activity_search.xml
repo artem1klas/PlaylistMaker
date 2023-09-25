@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/update"
-            style="@style/problem_updateButton"
+            style="@style/problem_update_button"
             android:layout_marginTop="@dimen/problem_text_button"/>
 
     </LinearLayout>
