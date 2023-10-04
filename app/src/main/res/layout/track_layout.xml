@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/color_another_background"
                 android:fontFamily="@font/ys_text_regular"
-                android:text="@string/dot"
+                android:text=" • "
                 android:textColor="@color/color_track_another"
                 android:textSize="11sp"/>
 
@@ -72,7 +72,6 @@
                 android:textColor="@color/color_track_another"
                 android:textSize="11sp"
                 tools:text="trackTime"/>
-
         </LinearLayout>
     </LinearLayout>
 

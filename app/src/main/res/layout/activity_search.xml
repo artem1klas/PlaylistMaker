@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_another_background"
@@ -34,7 +33,7 @@
         android:paddingBottom="24dp">
 
         <EditText
-            android:id="@+id/search"
+            android:id="@+id/queryInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_edittext"
@@ -42,9 +41,11 @@
             android:drawablePadding="8dp"
             android:fontFamily="@font/ys_text_medium"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:paddingVertical="10dp"
             android:paddingStart="12dp"
+            android:singleLine="true"
             android:textColor="@color/black"
             android:textColorHint="@color/color_search_textColorHint"
             android:textCursorDrawable="@drawable/cursor"
@@ -57,17 +58,70 @@
             android:layout_height="24dp"
             android:layout_gravity="end|center"
             android:layout_margin="8dp"
-            app:icon="@drawable/icon_clear"
             android:visibility="gone"
             app:backgroundTint="@color/ligth_gray"
-            app:iconTint="@color/black"
-            app:iconSize="@dimen/icon_size"/>
+            app:icon="@drawable/icon_clear"
+            app:iconSize="@dimen/icon_size"
+            app:iconTint="@color/black" />
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trackList"
+    <LinearLayout
+        android:id="@+id/window_disconnect"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/window_disconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/problem_top_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/problem_connect"
+            style="@style/problem_text"
+            android:layout_marginTop="@dimen/problem_image_text"/>
+
+        <Button
+            android:id="@+id/problem_updateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            style="@style/problem_update_button"
+            android:layout_marginTop="@dimen/problem_text_button"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/window_not_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            style="@style/window_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/problem_top_image"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_found"
+            style="@style/problem_text"
+            android:layout_marginTop="@dimen/problem_image_text"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/window_trackList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </LinearLayout>
