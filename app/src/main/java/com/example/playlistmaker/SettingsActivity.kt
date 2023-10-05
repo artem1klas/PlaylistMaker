@@ -27,14 +27,14 @@ class SettingsActivity : AppCompatActivity() {
         val buttonSupport = findViewById<Button>(R.id.settings_support)
         val buttonAgreement = findViewById<Button>(R.id.settings_agreement)
 
-                       themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
 
 
 
-        buttonArrowBack.setOnClickListener{ finish() }
+        buttonArrowBack.setOnClickListener { finish() }
 
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
-          (applicationContext as App).switchTheme(checked)
+            (applicationContext as App).switchTheme(checked)
 
             sharedPrefs.edit()
                 .putBoolean(IS_DARK_THEME_KEY, checked)
@@ -58,7 +58,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         buttonAgreement.setOnClickListener {
-            val openUserAgreement = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.https_offer)))
+            val openUserAgreement =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.https_offer)))
             startActivity(openUserAgreement)
         }
 

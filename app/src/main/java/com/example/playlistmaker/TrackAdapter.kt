@@ -7,16 +7,6 @@ class TrackAdapter(private val listener: TrackViewHolder.OnItemClickListener) : 
 
     var tracks = ArrayList<Track>()
 
-//    interface OnItemClickListener {
-//        fun onItemClick(track: Track)
-//    }
-//    private var listener: OnItemClickListener? = null
-//    fun setOnItemClickListener(listener: OnItemClickListener) {
-//        this.listener = listener
-//    }
-
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder(parent)
 
 
