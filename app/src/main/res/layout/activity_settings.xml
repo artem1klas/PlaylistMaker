@@ -27,7 +27,7 @@
 
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchcompat"
+        android:id="@+id/themeSwitcher"
         style="@style/settings_switch"
         tools:ignore="UseSwitchCompatOrMaterialXml"/>
 

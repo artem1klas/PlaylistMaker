@@ -13,5 +13,8 @@
     <dimen name="problem_top_image">102dp</dimen>
     <dimen name="problem_image_text">16dp</dimen>
     <dimen name="problem_text_button">24dp</dimen>
+    <dimen name="history_recycler_button">24dp</dimen>
+    <dimen name="history_top_text">18dp</dimen>
+    <dimen name="history_text_recycler">12dp</dimen>
 
 </resources>

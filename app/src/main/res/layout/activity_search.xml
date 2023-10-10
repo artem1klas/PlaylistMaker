@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_another_background"
@@ -78,24 +79,25 @@
             style="@style/window_disconnect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/problem_top_image"/>
+            android:layout_marginTop="@dimen/problem_top_image" />
 
         <TextView
+            style="@style/problem_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/problem_connect"
-            style="@style/problem_text"
-            android:layout_marginTop="@dimen/problem_image_text"/>
+            android:layout_marginTop="@dimen/problem_image_text"
+            android:text="@string/problem_connect" />
 
         <Button
             android:id="@+id/problem_updateButton"
+            style="@style/problem_update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/update"
-            style="@style/problem_update_button"
-            android:layout_marginTop="@dimen/problem_text_button"/>
+            android:layout_marginTop="@dimen/problem_text_button"
+            android:text="@string/update" />
 
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/window_not_found"
         android:layout_width="match_parent"
@@ -108,20 +110,54 @@
             style="@style/window_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/problem_top_image"/>
+            android:layout_marginTop="@dimen/problem_top_image" />
 
         <TextView
+            style="@style/problem_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nothing_found"
+            android:layout_marginTop="@dimen/problem_image_text"
+            android:text="@string/nothing_found" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/window_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
             style="@style/problem_text"
-            android:layout_marginTop="@dimen/problem_image_text"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/history_top_text"
+            android:text="@string/you_searched" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hystory_trackList_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/history_text_recycler"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_clear_history"
+            style="@style/problem_update_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/history_recycler_button"
+            android:text="@string/clear_history" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/window_trackList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>
