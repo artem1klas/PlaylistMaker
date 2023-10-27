@@ -5,4 +5,5 @@
         <color name="color_search_textColorHint">@color/black</color>
         <color name="color_track_title">@color/white</color>
         <color name="color_track_another">@color/white</color>
+        <color name="color_player_button_second">@color/white</color>
 </resources>

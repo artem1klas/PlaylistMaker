@@ -4,6 +4,7 @@ import TrackAdapter
 import TrackViewHolder
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,6 +41,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     private lateinit var historyList: RecyclerView
     private val adapter = TrackAdapter(this)
     private val historyAdapter = TrackAdapter(this)
+//    private val audioPlayerIntent = Intent(this, AudioPlayerActivity::class.java)
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +60,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         val windowNotFound = findViewById<LinearLayout>(R.id.window_not_found)
         val windowTrackList = findViewById<RecyclerView>(R.id.window_trackList)
         val widowHistory = findViewById<LinearLayout>(R.id.window_history)
+
 
         trackList = findViewById<RecyclerView>(R.id.window_trackList)
         trackList.layoutManager = LinearLayoutManager(this)
@@ -210,11 +214,16 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
     override fun onClick(track: Track) {
         searchHistory.add(track)
+
+        val intent = Intent(this, AudioPlayerActivity::class.java)
+        intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
+        startActivity(intent)
     }
 
     companion object {
         const val TEXT_SEARCH = "TEXT_SEARCH"
         const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
+        const val SELECTED_TRACK = "selected_track"
     }
 }
 enum class StatementType {

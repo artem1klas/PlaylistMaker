@@ -17,4 +17,10 @@
     <string name="problem_connect">Проблемы со связью\n\n Загрузка не удалась.Проверьте подключение к интернету</string>
     <string name="you_searched">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
+    <string name="country">Страна</string>
+    <string name="genre">Жанр</string>
+    <string name="year">Год</string>
+    <string name="collectionName">Альбом</string>
+    <string name="duration">Длительность</string>
+    <string name="create_playlist">Плейлист «BeSt SoNg EvEr!» создан</string>
 </resources>

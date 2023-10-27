@@ -110,4 +110,14 @@
         <item name="android:textSize">@dimen/text</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="mediaPlayer_property">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textColor">@color/text_gray</item>
+    </style>
+    <style name="mediaPlayer_value">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textColor">@color/color_track_title</item>
+    </style>
 </resources>
