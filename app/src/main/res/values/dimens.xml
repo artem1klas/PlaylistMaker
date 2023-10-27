@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="dimen_0">0dp</dimen>
     <dimen name="title">26sp</dimen>
     <dimen name="text">19sp</dimen>
     <dimen name="button_radius">16dp</dimen>
     <dimen name="icon_size">24dp</dimen>
-    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="element_border_8">8dp</dimen>
     <dimen name="button_margin_in_main">8dp</dimen>
     <dimen name="contur_margin">16dp</dimen>
     <dimen name="button_size">32dp</dimen>
@@ -16,5 +17,6 @@
     <dimen name="history_recycler_button">24dp</dimen>
     <dimen name="history_top_text">18dp</dimen>
     <dimen name="history_text_recycler">12dp</dimen>
+    <dimen name="player_distance_bottom_elements">20dp</dimen>
 
 </resources>

@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.util.Locale
 
-const val CURENT_TRACK_TIME = "00:30"
+const val CURENT_TRACK_TIME = "00:00"
 
 class AudioPlayerHolder(private val audioPlayerActivity: AudioPlayerActivity) {
     private val imageTrack = audioPlayerActivity.findViewById<ImageView>(R.id.imageTrack)
