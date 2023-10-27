@@ -13,17 +13,17 @@ import com.google.gson.Gson
 import java.util.Locale
 
 const val SELECTED_TRACK = "selected_track"
-private const val DELAY = 300L
+private const val DELAY_MILLIS = 300L
 
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var track: Track
     private var audioPlayerHolder: AudioPlayerHolder? = null
-    private lateinit var mainThreadHandler: Handler
+    private var mainThreadHandler: Handler? = null
 
-    private lateinit var playButton: ImageView
-    private lateinit var addButton: ImageView
-    private lateinit var likeButton: ImageView
-    private lateinit var backButton: Button
+    private var playButton: ImageView? = null
+    private var addButton: ImageView? = null
+    private var likeButton: ImageView? = null
+    private var backButton: Button? = null
     private var timeView: TextView? = null
 
     private var mediaPlayer = MediaPlayer()
@@ -46,29 +46,29 @@ class AudioPlayerActivity : AppCompatActivity() {
         backButton = findViewById(R.id.arrow_back)
         timeView = findViewById(R.id.currentTrackTime)
 
-        backButton.setOnClickListener {
+        backButton?.setOnClickListener {
             finish()
         }
 
-        addButton.setOnClickListener {
-            addButton.setImageResource(R.drawable.player_add_clicked)
+        addButton?.setOnClickListener {
+            addButton?.setImageResource(R.drawable.player_add_clicked)
         }
 
-        playButton.setOnClickListener {
+        playButton?.setOnClickListener {
             playbackControl()
         }
 
-        likeButton.setOnClickListener {
-            likeButton.setImageResource(R.drawable.player_like_clicked)
+        likeButton?.setOnClickListener {
+            likeButton?.setImageResource(R.drawable.player_like_clicked)
         }
 
         preparePlayer()
     }
 
-    private val updateTimeView = object : Runnable {
+    private val updateTimeViewRunnable = object : Runnable {
             override fun run() {
                 timeView?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
-                mainThreadHandler?.postDelayed(this, DELAY)
+                mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
             }
     }
 
@@ -76,29 +76,29 @@ class AudioPlayerActivity : AppCompatActivity() {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
+            playButton?.isEnabled = true
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.player_play)
+            playButton?.setImageResource(R.drawable.player_play)
             playerState = STATE_PREPARED
-            mainThreadHandler.removeCallbacks(updateTimeView)
-            timeView?.text = "00:00"
+            mainThreadHandler?.removeCallbacks(updateTimeViewRunnable)
+            timeView?.text = resources.getString(R.string.time_null)
         }
     }
 
     private fun startPlayer() {
         mediaPlayer.start()
-        playButton.setImageResource(R.drawable.player_play_clicked)
+        playButton?.setImageResource(R.drawable.player_play_clicked)
         playerState = STATE_PLAYING
-        mainThreadHandler?.post(updateTimeView)
+        mainThreadHandler?.post(updateTimeViewRunnable)
     }
 
     private fun pausePlayer() {
         mediaPlayer.pause()
-        playButton.setImageResource(R.drawable.player_play)
+        playButton?.setImageResource(R.drawable.player_play)
         playerState = STATE_PAUSED
-        mainThreadHandler.removeCallbacks(updateTimeView)
+        mainThreadHandler?.removeCallbacks(updateTimeViewRunnable)
     }
 
     private fun playbackControl() {
@@ -121,7 +121,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
-        mainThreadHandler.removeCallbacks(updateTimeView)
+        mainThreadHandler?.removeCallbacks(updateTimeViewRunnable)
     }
 
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)

@@ -39,23 +39,23 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     private var lastInputText = ""
     private var sharedPrefHistory: SharedPreferences? = null
     private lateinit var searchHistory: SearchHistory
-    private lateinit var trackList: RecyclerView
-    private lateinit var historyList: RecyclerView
+    private var trackList: RecyclerView? = null
+    private var historyList: RecyclerView? = null
     private val adapter = TrackAdapter(this)
     private val historyAdapter = TrackAdapter(this)
-    private val handler = Handler(Looper.getMainLooper())
+    private var handler: Handler? = null
     private var isClickAllowed = true
 
-    private lateinit var backButton: Button
-    private lateinit var queryInput: EditText
-    private lateinit var clearButton: Button
-    private lateinit var updateButton: Button
-    private lateinit var clearHistoryButton: Button
-    private lateinit var windowDisconnect: LinearLayout
-    private lateinit var windowNotFound: LinearLayout
-    private lateinit var windowTrackList: RecyclerView
-    private lateinit var widowHistory: LinearLayout
-    private lateinit var windowProgressBar: ProgressBar
+    private var backButton: Button? = null
+    private var queryInput: EditText? = null
+    private var clearButton: Button? = null
+    private var updateButton: Button? = null
+    private var clearHistoryButton: Button? = null
+    private var windowDisconnect: LinearLayout? = null
+    private var windowNotFound: LinearLayout? = null
+    private var windowTrackList: RecyclerView? = null
+    private var widowHistory: LinearLayout? = null
+    private var windowProgressBar: ProgressBar? = null
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +64,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
         sharedPrefHistory = getSharedPreferences(HISTORY_SHARED_PREFENCES, MODE_PRIVATE)
         searchHistory = SearchHistory(sharedPrefHistory!!)
+        handler = Handler(Looper.getMainLooper())
 
         backButton = findViewById(R.id.back)
         queryInput = findViewById(R.id.queryInput)
@@ -77,58 +78,58 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         windowProgressBar = findViewById(R.id.window_progressBar)
 
         trackList = findViewById<RecyclerView>(R.id.window_trackList)
-        trackList.layoutManager = LinearLayoutManager(this)
-        trackList.adapter = adapter
+        trackList?.layoutManager = LinearLayoutManager(this)
+        trackList?.adapter = adapter
 
         historyList = findViewById<RecyclerView>(R.id.hystory_trackList_recycle)
-        historyList.layoutManager = LinearLayoutManager(this)
-        historyList.adapter = historyAdapter
+        historyList?.layoutManager = LinearLayoutManager(this)
+        historyList?.adapter = historyAdapter
         historyAdapter.tracks.addAll(searchHistory.read())
 
-        backButton.setOnClickListener {
+        backButton?.setOnClickListener {
             finish()
         }
 
-        queryInput.setOnFocusChangeListener { _, hasFocus ->
+        queryInput?.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 updateElementVisible(StatementType.HISTORY_MOMENT)
             }
         }
 
-        clearButton.setOnClickListener {
+        clearButton?.setOnClickListener {
             textSearch = ""
-            queryInput.setText(textSearch)
+            queryInput?.setText(textSearch)
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(clearButton.windowToken, 0)
+            inputMethodManager?.hideSoftInputFromWindow(clearButton?.windowToken, 0)
             adapter.tracks.clear()
             historyAdapter.tracks.clear()
             historyAdapter.tracks.addAll(searchHistory.read())
             updateElementVisible(StatementType.HISTORY_MOMENT)
         }
 
-        updateButton.setOnClickListener {
+        updateButton?.setOnClickListener {
             search(lastInputText)
         }
 
-        clearHistoryButton.setOnClickListener {
+        clearHistoryButton?.setOnClickListener {
             searchHistory.clear()
             historyAdapter.tracks.clear()
             updateElementVisible(StatementType.HISTORY_MOMENT)
             historyAdapter.notifyDataSetChanged()
         }
 
-        queryInput.addTextChangedListener(searchTextWatcher)
+        queryInput?.addTextChangedListener(searchTextWatcher)
     }
 
-    private val searchRunnable = Runnable { search(queryInput.text.toString()) }
+    private val searchRunnable = Runnable { search(queryInput?.text.toString()) }
 
     private val searchTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            clearButton.visibility = clearButtonVisibility(p0)
+            clearButton?.visibility = clearButtonVisibility(p0)
             updateElementVisible(StatementType.TRACKS_OR_EMPTY)
             textSearch = p0.toString()
             if(!p0.isNullOrEmpty()) {
@@ -144,43 +145,43 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     fun updateElementVisible(type: StatementType) {
         when (type) {
             StatementType.TRACKS_OR_EMPTY -> {
-                windowDisconnect.isVisible = false
-                windowNotFound.isVisible = false
-                windowTrackList.isVisible = true
-                widowHistory.isVisible = false
-                windowProgressBar.isVisible = false
+                windowDisconnect?.isVisible = false
+                windowNotFound?.isVisible = false
+                windowTrackList?.isVisible = true
+                widowHistory?.isVisible = false
+                windowProgressBar?.isVisible = false
             }
 
             StatementType.NOT_FOUND -> {
-                windowDisconnect.isVisible = false
-                windowNotFound.isVisible = true
-                windowTrackList.isVisible = false
-                widowHistory.isVisible = false
-                windowProgressBar.isVisible = false
+                windowDisconnect?.isVisible = false
+                windowNotFound?.isVisible = true
+                windowTrackList?.isVisible = false
+                widowHistory?.isVisible = false
+                windowProgressBar?.isVisible = false
             }
 
             StatementType.NO_CONNECTION -> {
-                windowDisconnect.isVisible = true
-                windowNotFound.isVisible = false
-                windowTrackList.isVisible = false
-                widowHistory.isVisible = false
-                windowProgressBar.isVisible = false
+                windowDisconnect?.isVisible = true
+                windowNotFound?.isVisible = false
+                windowTrackList?.isVisible = false
+                widowHistory?.isVisible = false
+                windowProgressBar?.isVisible = false
             }
 
             StatementType.HISTORY_MOMENT -> {
-                windowDisconnect.isVisible = false
-                windowNotFound.isVisible = false
-                windowTrackList.isVisible = false
-                widowHistory.isVisible = historyAdapter.tracks.isNotEmpty()
-                windowProgressBar.isVisible = false
+                windowDisconnect?.isVisible = false
+                windowNotFound?.isVisible = false
+                windowTrackList?.isVisible = false
+                widowHistory?.isVisible = historyAdapter.tracks.isNotEmpty()
+                windowProgressBar?.isVisible = false
             }
 
             StatementType.PROGRESS_BAR -> {
-                windowDisconnect.isVisible = false
-                windowNotFound.isVisible = false
-                windowTrackList.isVisible = false
-                widowHistory.isVisible = false
-                windowProgressBar.isVisible = true
+                windowDisconnect?.isVisible = false
+                windowNotFound?.isVisible = false
+                windowTrackList?.isVisible = false
+                widowHistory?.isVisible = false
+                windowProgressBar?.isVisible = true
             }
 
         }
@@ -201,7 +202,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 response: Response<TrackResponse>
             ) {
                 val responseBody = response.body()
-                if (response.code() == 200) {
+                if (response.code() == CODE_OK) {
                     adapter.tracks.clear()
 
                     if (responseBody?.results?.isNotEmpty() == true) {
@@ -216,7 +217,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
             override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
                 adapter.tracks.clear()
-                lastInputText = queryInput.text.toString()
+                lastInputText = queryInput?.text.toString()
                 updateElementVisible(StatementType.NO_CONNECTION)
             }
 
@@ -225,8 +226,8 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
 
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        handler?.removeCallbacks(searchRunnable)
+        handler?.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -251,7 +252,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            handler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
         }
         return current
     }
@@ -264,13 +265,18 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
             startActivity(intent)
         }
     }
+    override fun onDestroy() {
+        super.onDestroy()
+        handler?.removeCallbacks(searchRunnable)
+    }
 
     companion object {
         const val TEXT_SEARCH = "TEXT_SEARCH"
         const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
         const val SELECTED_TRACK = "selected_track"
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+        private const val CODE_OK = 200
     }
 }
 enum class StatementType {
