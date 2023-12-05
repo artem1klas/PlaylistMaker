@@ -13,7 +13,7 @@
         android:id="@+id/trackImage"
         android:layout_width="@dimen/track_image"
         android:layout_height="@dimen/track_image"
-        android:layout_margin="@dimen/icon_padding"
+        android:layout_margin="@dimen/element_border_8"
         android:background="@color/color_another_background"
         android:src="@drawable/image_placeholdertrack" />
 

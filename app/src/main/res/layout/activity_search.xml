@@ -160,4 +160,13 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <ProgressBar
+        android:id="@+id/window_progressBar"
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/top_progressBar"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone"/>
+
 </LinearLayout>
