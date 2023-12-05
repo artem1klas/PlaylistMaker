@@ -1,7 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +8,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.Track
 import com.google.gson.Gson
 import java.util.Locale
 
@@ -26,7 +28,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private var backButton: Button? = null
     private var timeView: TextView? = null
 
-    private var mediaPlayer = MediaPlayer()
+    private var mediaPlayer = Creator.provideAudioPlayer()
     private var playerState = STATE_DEFAULT
     private lateinit var url: String
 
@@ -67,7 +69,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     private val updateTimeViewRunnable = object : Runnable {
             override fun run() {
-                timeView?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+                timeView?.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.getCurrentPosition())
                 mainThreadHandler?.postDelayed(this, DELAY_MILLIS)
             }
     }
@@ -81,9 +83,9 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
         mediaPlayer.setOnCompletionListener {
             playButton?.setImageResource(R.drawable.player_play)
+            timeView?.text = resources.getString(R.string.time_null)
             playerState = STATE_PREPARED
             mainThreadHandler?.removeCallbacks(updateTimeViewRunnable)
-            timeView?.text = resources.getString(R.string.time_null)
         }
     }
 

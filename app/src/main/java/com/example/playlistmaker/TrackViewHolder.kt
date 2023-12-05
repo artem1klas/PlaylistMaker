@@ -1,17 +1,14 @@
-import android.content.Context
+package com.example.playlistmaker
+
 import android.icu.text.SimpleDateFormat
-import android.location.GnssAntennaInfo.Listener
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.R
-import com.example.playlistmaker.Track
+import com.example.playlistmaker.domain.Track
 import java.util.Locale
 
 class TrackViewHolder(parent: ViewGroup)
@@ -44,15 +41,5 @@ class TrackViewHolder(parent: ViewGroup)
     interface OnItemClickListener {
         fun onClick(track: Track)
     }
-
-    fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
-
 }
 

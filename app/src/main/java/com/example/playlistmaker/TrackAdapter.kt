@@ -1,9 +1,8 @@
-import android.content.Intent
+package com.example.playlistmaker
+
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.AudioPlayerActivity
-import com.example.playlistmaker.Track
-import com.google.gson.Gson
+import com.example.playlistmaker.domain.Track
 
 
 class TrackAdapter(private val listener: TrackViewHolder.OnItemClickListener) : RecyclerView.Adapter<TrackViewHolder> () {

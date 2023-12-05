@@ -1,5 +1,6 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
+import com.example.*
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.util.TypedValue
@@ -7,6 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.Track
+import com.example.playlistmaker.dpToPx
 import java.util.Locale
 
 const val CURENT_TRACK_TIME = "00:00"
@@ -40,13 +44,5 @@ class AudioPlayerHolder(private val audioPlayerActivity: AudioPlayerActivity) {
             .transform(RoundedCorners(dpToPx(8f, audioPlayerActivity.applicationContext)))
             .into(imageTrack)
     }
-    fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
 
 }
