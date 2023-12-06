@@ -1,9 +1,9 @@
 package com.example.playlistmaker.data
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.domain.AudioPlayerInteractor
+import com.example.playlistmaker.domain.AudioPlayerReposotory
 
-class AudioPlayerInteractorImpl(): AudioPlayerInteractor {
+class AudioPlayerRepositoryImpl() : AudioPlayerReposotory {
     val player = MediaPlayer()
 
     override fun prepareAsync() {
@@ -39,11 +39,10 @@ class AudioPlayerInteractorImpl(): AudioPlayerInteractor {
     }
 
     override fun setOnPreparedListener(onPreparedListener: () -> Unit) {
-        player.setOnPreparedListener{onPreparedListener()}
+        player.setOnPreparedListener { onPreparedListener() }
     }
 
     override fun setOnCompletionListener(onCompletionListener: () -> Unit) {
-        player.setOnCompletionListener{onCompletionListener()}
+        player.setOnCompletionListener { onCompletionListener() }
     }
-
 }
