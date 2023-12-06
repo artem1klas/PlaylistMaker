@@ -1,7 +1,5 @@
 package com.example.playlistmaker
 
-import TrackAdapter
-import TrackViewHolder
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -21,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.domain.Track
+import com.example.playlistmaker.presentation.AudioPlayerActivity
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
