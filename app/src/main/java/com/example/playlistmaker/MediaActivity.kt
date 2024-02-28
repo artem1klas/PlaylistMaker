@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.playlistmaker.R
 
 class MediaActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
