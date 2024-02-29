@@ -21,8 +21,3 @@ class TrackAdapter(private val listener: TrackViewHolder.OnItemClickListener, va
     }
     override fun getItemCount() = tracks.size
 }
-
-
-
-
-

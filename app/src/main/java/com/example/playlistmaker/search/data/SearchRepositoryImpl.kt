@@ -2,16 +2,15 @@ package com.example.playlistmaker.search.data
 
 import android.icu.text.SimpleDateFormat
 import com.example.playlistmaker.search.data.dto.Resource
-import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.data.dto.TrackResponse
-import com.example.playlistmaker.search.domain.api.TrackSearchRepository
+import com.example.playlistmaker.search.data.dto.TrackSearchRequest
+import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
 import java.util.Locale
 
-class TrackSearchRepositoryImpl(private val networkClient: NetworkClient) : TrackSearchRepository {
+class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
     override fun search(expression: String): Resource<List<Track>> {
         val responce = networkClient.doRequest(TrackSearchRequest(expression))
-
 
         return when (responce.resultCode) {
             -1 -> {

@@ -14,7 +14,7 @@ import java.util.Locale
 
 class PlayerViewModel(private val url: String) : ViewModel() {
 
-    private val player = Creator.provideAudioPlayerInteractor()
+    private val player = Creator.providePlayerInteractor()
 
     val handler = Handler(Looper.getMainLooper())
 

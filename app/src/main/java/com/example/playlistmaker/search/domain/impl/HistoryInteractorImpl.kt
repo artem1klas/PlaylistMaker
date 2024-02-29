@@ -1,12 +1,12 @@
 package com.example.playlistmaker.search.domain.impl
 
-import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 
-class SearchHistoryInteractorImpl(
+class HistoryInteractorImpl(
     val searchHistoryRepository: SearchHistoryRepository
-) : SearchHistoryInteractor{
+) : HistoryInteractor{
     override fun read(): List<Track> {
         return searchHistoryRepository.read()
     }

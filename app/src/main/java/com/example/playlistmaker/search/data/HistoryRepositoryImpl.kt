@@ -8,7 +8,7 @@ import com.google.gson.Gson
 const val MAX_HISTORY_LIST_SIZE = 10
 const val HISTORY_KEY = "history_key"
 
-class SearchHistoryRepositoryImpl(val sharedPreferenc: SharedPreferences) : SearchHistoryRepository {
+class HistoryRepositoryImpl(val sharedPreferenc: SharedPreferences) : SearchHistoryRepository {
 
     override fun read(): List<Track> {
         val json = sharedPreferenc.getString(HISTORY_KEY, null) ?: return emptyList()

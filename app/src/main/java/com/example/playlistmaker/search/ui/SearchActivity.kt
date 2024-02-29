@@ -9,33 +9,24 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
-import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
 class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener {
 
-    val interactor = Creator.provideTrackSearchInteractor(this)
+    private lateinit var viewModel: SearchViewModel
 
-
-    private var textSearch = ""
-    private var lastInputText = ""
+    private var lastInput = ""
     private var sharedPrefHistory: SharedPreferences? = null
-    private lateinit var searchHistory: SearchHistory
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(this, tracks)
@@ -45,50 +36,21 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
     private lateinit var binding: ActivitySearchBinding
 
-//    private var trackList: RecyclerView? = null
-//    private var historyList: RecyclerView? = null
-//    private var backButton: Button? = null
-//    private var queryInput: EditText? = null
-//    private var clearButton: Button? = null
-//    private var updateButton: Button? = null
-//    private var clearHistoryButton: Button? = null
-//    private var windowDisconnect: LinearLayout? = null
-//    private var windowNotFound: LinearLayout? = null
-//    private var windowTrackList: RecyclerView? = null
-//    private var windowHistory: LinearLayout? = null
-//    private var windowProgressBar: ProgressBar? = null
-
-
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Log.d("A12", "Activity   ------  create --------")
+
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         sharedPrefHistory = getSharedPreferences(HISTORY_SHARED_PREFENCES, MODE_PRIVATE)
-        searchHistory = SearchHistory(sharedPrefHistory!!)
         handler = Handler(Looper.getMainLooper())
 
-
-//        trackList = findViewById(R.id.windowTrackList)
-//        windowTrackList = findViewById(R.id.windowTrackList)
-//        historyList = findViewById(R.id.hystoryList)
-//        windowHistory = findViewById(R.id.windowHistory)
-//        backButton = findViewById(R.id.backButton)
-//        queryInput = findViewById(R.id.queryInput)
-//        clearButton = findViewById(R.id.clearButton)
-//        updateButton = findViewById(R.id.updateButton)
-//        clearHistoryButton = findViewById(R.id.clearHistoryButton)
-//        windowDisconnect = findViewById(R.id.windowDisconnect)
-//        windowNotFound = findViewById(R.id.windowNotFound)
-//        windowProgressBar = findViewById(R.id.windowProgressBar)
-
-
+        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory(sharedPrefHistory!!))[SearchViewModel::class.java]
 
         binding.windowTrackList.layoutManager = LinearLayoutManager(this)
         binding.windowTrackList.adapter = adapter
-
-
 
         binding.hystoryList.adapter = adapter
         binding.hystoryList.layoutManager = LinearLayoutManager(this)
@@ -98,54 +60,49 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         }
 
         binding.queryInput.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                tracks.clear()
-                tracks.addAll(searchHistory.read())
-                render(State.History(tracks))
+            if (hasFocus && binding.queryInput.text.isNullOrEmpty()) {
+                viewModel.readHistory()
             }
         }
 
         binding.clearButton.setOnClickListener {
-            textSearch = ""
-            binding.queryInput.setText(textSearch)
+            binding.queryInput.setText("")
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.clearButton.windowToken, 0)
-            tracks.clear()
-            tracks.addAll(searchHistory.read())
-            render(State.History(tracks))
+            binding.queryInput.clearFocus()
+            render(SearchActivityState.Empty)
         }
 
         binding.updateButton.setOnClickListener {
-            search(lastInputText)
+            viewModel?.searchDebounce(lastInput)
         }
 
         binding.clearHistoryButton.setOnClickListener {
-            searchHistory.clear()
-            tracks.clear()
-            tracks.addAll(searchHistory.read())
-            render(State.History(tracks))
+            viewModel.clearHistory()
         }
 
-        binding.queryInput.addTextChangedListener(searchTextWatcher)
+        binding.queryInput.addTextChangedListener(textWatcher)
+
+        viewModel.observeState().observe(this) {
+            Log.d("A12", "Activity  in observe")
+            Log.d("A12", "Activity  observeState is ${stateOfState()}")
+            render(it)
+        }
     }
 
-    private val searchRunnable = Runnable { search(binding.queryInput.text.toString()) }
-
-    private val searchTextWatcher = object : TextWatcher {
+    private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
             binding.clearButton.visibility = clearButtonVisibility(p0)
-            render(State.Empty)
-            textSearch = p0.toString()
+            render(SearchActivityState.Empty)
             if (!p0.isNullOrEmpty()) {
-                searchDebounce()
+                viewModel?.searchDebounce(p0.toString())
             } else {
-                tracks.clear()
-                tracks.addAll(searchHistory.read())
-                render(State.History(tracks))
+                viewModel.readHistory()
             }
         }
 
@@ -153,39 +110,10 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         }
     }
 
-    fun search(input: String) {
-        if (input.isNotEmpty()) {
-            render(State.Loading)
-        }
-
-        interactor.search(input, object : TrackSearchInteractor.TrackSearchConsumer {
-            override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                handler?.post {
-                    if (foundTracks != null) {
-                        tracks.clear()
-                        tracks.addAll(foundTracks)
-                    }
-                    when {
-                        errorMessage != null -> {
-                            render(State.NoConnection)
-                        }
-
-                        tracks.isEmpty() -> {
-                            render(State.NotFound)
-                        }
-
-                        else -> {
-                            render(State.Content(tracks))
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    fun render(state: State) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun render(state: SearchActivityState) {
         when (state) {
-            is State.Empty -> {
+            is SearchActivityState.Empty -> {
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
@@ -193,23 +121,41 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is State.Content -> {
+            is SearchActivityState.Content -> {
+                Log.d("A12", "Activity   in render content")
+                tracks.clear()
+                tracks.addAll(state.tracks)
+                Log.d("A12", "ACTIVITY    tracks is empty - ${tracks.isNullOrEmpty()}")
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = true
                 binding.windowHistory.isVisible = false
                 binding.windowProgressBar.isVisible = false
+                Log.d("A12", "Visible elements (in render content):\n" +
+                        "windowDisconnect ${binding.windowDisconnect.isVisible}\n"+
+                        "windowNotFound ${binding.windowNotFound.isVisible}\n" +
+                        "windowTrackList ${binding.windowTrackList.isVisible}\n" +
+                        "windowHistory ${binding.windowHistory.isVisible}\n" +
+                        "windowProgressBar ${binding.windowProgressBar.isVisible}\n")
             }
 
-            is State.NotFound -> {
+            is SearchActivityState.NotFound -> {
+                Log.d("A12", "Activity   in render not_found")
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = true
                 binding.windowTrackList.isVisible = false
                 binding.windowHistory.isVisible = false
                 binding.windowProgressBar.isVisible = false
+                Log.d("A12", "Visible elements (in render content):\n" +
+                        "windowDisconnect ${binding.windowDisconnect.isVisible}\n"+
+                        "windowNotFound ${binding.windowNotFound.isVisible}\n" +
+                        "windowTrackList ${binding.windowTrackList.isVisible}\n" +
+                        "windowHistory ${binding.windowHistory.isVisible}\n" +
+                        "windowProgressBar ${binding.windowProgressBar.isVisible}\n")
             }
 
-            is State.NoConnection -> {
+            is SearchActivityState.NoConnection -> {
+                this.lastInput = state.lastInput
                 binding.windowDisconnect.isVisible = true
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
@@ -217,55 +163,34 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is State.History -> {
+            is SearchActivityState.History -> {
+                Log.d("A12", "Activity   in render history")
+                tracks.clear()
+                tracks.addAll(state.tracks)
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
-                binding.windowHistory.isVisible = searchHistory.read().isNotEmpty()
+                binding.windowHistory.isVisible = true
                 binding.windowProgressBar.isVisible = false
+                Log.d("A12", "Visible elements (in render history):\n" +
+                        "windowDisconnect ${binding.windowDisconnect.isVisible}\n"+
+                        "windowNotFound ${binding.windowNotFound.isVisible}\n" +
+                        "windowTrackList ${binding.windowTrackList.isVisible}\n" +
+                        "windowHistory ${binding.windowHistory.isVisible}\n" +
+                        "windowProgressBar ${binding.windowProgressBar.isVisible}\n")
             }
 
-            is State.Loading -> {
+            is SearchActivityState.Loading -> {
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
                 binding.windowHistory.isVisible = false
                 binding.windowProgressBar.isVisible = true
             }
-
         }
         adapter.notifyDataSetChanged()
     }
 
-    sealed interface State {
-        object Loading : State
-
-        data class Content(val tracks: List<Track>) : State
-
-        data class History(val tracks: List<Track>) : State
-
-        object NoConnection : State
-
-        object Empty : State
-
-        object NotFound : State
-    }
-
-
-    private fun searchDebounce() {
-        handler?.removeCallbacks(searchRunnable)
-        handler?.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY_MILLIS)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(TEXT_SEARCH, textSearch)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        textSearch = savedInstanceState.getString(TEXT_SEARCH, "")
-    }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -286,31 +211,46 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
     override fun onClick(track: Track) {
         if (clickDebounce()) {
-            searchHistory.add(track)
+            viewModel.addHistory(track)
             val intent = Intent(this, PlayerActivity::class.java)
             intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
             startActivity(intent)
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        render(viewModel.observeState().value!!)
+        Log.d("A12", "Visible elements (in onstart):\n" +
+                "windowDisconnect ${binding.windowDisconnect.isVisible}\n"+
+                "windowNotFound ${binding.windowNotFound.isVisible}\n" +
+                "windowTrackList ${binding.windowTrackList.isVisible}\n" +
+                "windowHistory ${binding.windowHistory.isVisible}\n" +
+                "windowProgressBar ${binding.windowProgressBar.isVisible}\n")
+    }
+
+
     override fun onDestroy() {
         super.onDestroy()
-        handler?.removeCallbacks(searchRunnable)
-    }
+        textWatcher.let { binding.queryInput.removeTextChangedListener(it) }
+        Log.d("A12", "Activity   ------  destroy --------")
 
+    }
     companion object {
-        const val TEXT_SEARCH = "TEXT_SEARCH"
         const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
         const val SELECTED_TRACK = "selected_track"
-        private const val SEARCH_DEBOUNCE_DELAY_MILLIS = 2000L
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
+
+    private fun stateOfState(): String {
+        return when(viewModel.observeState().value) {
+            is SearchActivityState.Content -> "content"
+            is SearchActivityState.History -> "history"
+            is SearchActivityState.NoConnection -> "no connection"
+            is SearchActivityState.Empty -> "empty"
+            is SearchActivityState.NotFound -> "not found"
+            is SearchActivityState.Loading -> "loading"
+            else -> "error"
+        }
+    }
 }
-
-
-
-
-
-
-
-

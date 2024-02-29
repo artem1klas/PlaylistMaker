@@ -1,5 +1,4 @@
-package com.example.playlistmaker.search.ui5
-
+package com.example.playlistmaker.search.ui
 
 import android.app.Application
 import android.content.SharedPreferences
@@ -18,40 +17,44 @@ import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 
-
-class NewSearchViewModel(
+class SearchViewModel(
     application: Application,
     sharedPreferences: SharedPreferences
 ) : AndroidViewModel(application) {
 
+    init {
+        Log.d("A12", "VM   ------  create --------")
+    }
+
+    private val searchInteractor = Creator.provideSearchInteractor(application)
+    private val historyInteractor = Creator.provideHistoryInteractor(sharedPreferences)
+
+    val handler = Handler(Looper.getMainLooper())
 
     private var lastSearchText: String? = null
-
-    private val searchInteractor = Creator.provideTrackSearchInteractor(application)
-    private val historyInteractor = Creator.provideSearchHistoryInteractor(sharedPreferences)
 
     fun addHistory(track: Track) {
         historyInteractor.add(track)
     }
+
     fun clearHistory() {
         historyInteractor.clear()
+        stateLiveData.postValue(SearchActivityState.Empty)
     }
-    fun readHistory() {
+
+    fun readHistory(): List<Track> {
         val tracks = historyInteractor.read()
         if (tracks.isEmpty()) {
-            stateLiveData.postValue(NewState.Empty)
+            stateLiveData.postValue(SearchActivityState.Empty)
         } else {
-            stateLiveData.postValue(NewState.History(tracks))
+            stateLiveData.postValue(SearchActivityState.History(tracks))
         }
+        return tracks
     }
 
 
-
-
-    val handler = Handler(Looper.getMainLooper())
-
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText && stateLiveData.value !is NewState.NoConnection) {
+        if (lastSearchText == changedText && stateLiveData.value !is SearchActivityState.NoConnection) {
             return
         }
         this.lastSearchText = changedText
@@ -73,32 +76,32 @@ class NewSearchViewModel(
     fun search(input: String) {
 
         if (input.isNotEmpty()) {
-            renderState(NewState.Loading)
+            renderState(SearchActivityState.Loading)
         }
 
         searchInteractor.search(input, object : TrackSearchInteractor.TrackSearchConsumer {
             override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
                 when {
                     errorMessage != null -> {
-                        renderState(NewState.NoConnection(input))
+                        renderState(SearchActivityState.NoConnection(input))
                     }
 
                     foundTracks.isNullOrEmpty() -> {
-                        renderState(NewState.NotFound)
+                        renderState(SearchActivityState.NotFound)
                     }
 
                     else -> {
-                        renderState(NewState.Content(foundTracks))
+                        renderState(SearchActivityState.Content(foundTracks))
                     }
                 }
             }
         })
     }
 
-    private val stateLiveData = MutableLiveData<NewState>(NewState.Empty)
-    fun observeState(): LiveData<NewState> = stateLiveData
+    private val stateLiveData = MutableLiveData<SearchActivityState>(SearchActivityState.Empty)
+    fun observeState(): LiveData<SearchActivityState> = stateLiveData
 
-    private fun renderState(state: NewState) {
+    private fun renderState(state: SearchActivityState) {
         stateLiveData.postValue(state)
     }
 
@@ -108,19 +111,19 @@ class NewSearchViewModel(
         Log.d("A12", "VM   ------  destroy --------")
     }
 
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
-        fun getViewModelFactory(sharedPreferences: SharedPreferences): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                NewSearchViewModel(
-                    this[APPLICATION_KEY] as Application,
-                    sharedPreferences
-                )
+        fun getViewModelFactory(sharedPreferences: SharedPreferences): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer {
+                    SearchViewModel(
+                        this[APPLICATION_KEY] as Application,
+                        sharedPreferences
+                    )
+                }
             }
-        }
     }
 }
 
