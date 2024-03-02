@@ -1,11 +1,9 @@
 package com.example.playlistmaker.search.ui
 
 import android.app.Application
-import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,16 +16,11 @@ import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 
 class SearchViewModel(
-    application: Application,
-    sharedPreferences: SharedPreferences
+    application: Application
 ) : AndroidViewModel(application) {
 
-    init {
-        Log.d("A12", "VM   ------  create --------")
-    }
-
     private val searchInteractor = Creator.provideSearchInteractor(application)
-    private val historyInteractor = Creator.provideHistoryInteractor(sharedPreferences)
+    private val historyInteractor = Creator.provideHistoryInteractor(application)
 
     val handler = Handler(Looper.getMainLooper())
 
@@ -108,19 +101,17 @@ class SearchViewModel(
     override fun onCleared() {
         super.onCleared()
         handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-        Log.d("A12", "VM   ------  destroy --------")
     }
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
 
-        fun getViewModelFactory(sharedPreferences: SharedPreferences): ViewModelProvider.Factory =
+        fun getViewModelFactory(): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
                     SearchViewModel(
-                        this[APPLICATION_KEY] as Application,
-                        sharedPreferences
+                        this[APPLICATION_KEY] as Application
                     )
                 }
             }

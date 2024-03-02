@@ -18,7 +18,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     val handler = Handler(Looper.getMainLooper())
 
-    private val playerLiveData = MutableLiveData<PlayerState>()
+    private val playerLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
     fun observeState(): LiveData<PlayerState> = playerLiveData
 
     fun preparePlayer() {
@@ -40,12 +40,8 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     fun pausePlayer() {
         player.pause()
-        playerLiveData.postValue(PlayerState.Paused)
+        playerLiveData.postValue(PlayerState.Paused(getCurrentPosition()))
         handler.removeCallbacks(updateTimeViewRunnable)
-    }
-
-    fun releasePlayer() {
-        player.release()
     }
 
     private val updateTimeViewRunnable = object : Runnable {
@@ -59,13 +55,17 @@ class PlayerViewModel(private val url: String) : ViewModel() {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.getCurrentPosition())
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        player.release()
+    }
+
     companion object {
         fun getViewModelFactory(url: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 PlayerViewModel(url)
             }
         }
-
         private const val DELAY_MILLIS = 300L
     }
 

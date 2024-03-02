@@ -27,10 +27,18 @@ class PlayerActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track.previewUrl))[PlayerViewModel::class.java]
         viewModel.observeState().observe(this) {
             when(it) {
+                is PlayerState.Default -> {
+                    viewModel.preparePlayer()
+                }
+                is PlayerState.Prepared -> {
+                    preparePlayer()
+                }
                 is PlayerState.Playing -> {
                     binding.currentTrackTime.text = it.time
                 }
-               else -> {}
+                is PlayerState.Paused -> {
+                    binding.currentTrackTime.text = it.time
+                }
             }
         }
 
@@ -53,12 +61,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.likeButton.setOnClickListener {
             binding.likeButton.setImageResource(R.drawable.player_like_clicked)
         }
-
-        preparePlayer()
     }
 
     private fun preparePlayer() {
-        viewModel.preparePlayer()
         binding.playButton.setImageResource(R.drawable.player_play)
         binding.currentTrackTime.text = resources.getString(R.string.time_null)
         binding.playButton.isEnabled = true
@@ -79,7 +84,10 @@ class PlayerActivity : AppCompatActivity() {
             is PlayerState.Playing -> {
                 pausePlayer()
             }
-            is PlayerState.Prepared, PlayerState.Paused -> {
+            is PlayerState.Prepared -> {
+                startPlayer()
+            }
+            is PlayerState.Paused -> {
                 startPlayer()
             }
             else -> {}
@@ -89,11 +97,6 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         pausePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.releasePlayer()
     }
 
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)

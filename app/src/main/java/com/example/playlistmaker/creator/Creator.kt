@@ -32,8 +32,8 @@ object Creator {
         return SearchInteractorImpl(getSearchRepository(context))
     }
 
-    fun provideHistoryInteractor(sharedPreferences: SharedPreferences): HistoryInteractor {
-        return HistoryInteractorImpl(HistoryRepositoryImpl(sharedPreferences))
+    fun provideHistoryInteractor(context: Context): HistoryInteractor {
+        return HistoryInteractorImpl(HistoryRepositoryImpl(context))
     }
 
     fun provideSettingsInteractor(context: Context): SettingsInteractor {
