@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.domain.models.TypeError
 
 class SearchViewModel(
     application: Application
@@ -63,7 +64,6 @@ class SearchViewModel(
             SEARCH_REQUEST_TOKEN,
             postTime,
         )
-
     }
 
     fun search(input: String) {
@@ -73,9 +73,9 @@ class SearchViewModel(
         }
 
         searchInteractor.search(input, object : TrackSearchInteractor.TrackSearchConsumer {
-            override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
+            override fun consume(foundTracks: List<Track>?, typeError: TypeError?) {
                 when {
-                    errorMessage != null -> {
+                    typeError != null -> {
                         renderState(SearchActivityState.NoConnection(input))
                     }
 

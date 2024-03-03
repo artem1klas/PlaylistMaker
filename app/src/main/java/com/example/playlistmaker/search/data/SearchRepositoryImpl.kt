@@ -1,11 +1,12 @@
 package com.example.playlistmaker.search.data
 
 import android.icu.text.SimpleDateFormat
-import com.example.playlistmaker.search.data.dto.Resource
+import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.domain.models.TypeError
 import java.util.Locale
 
 class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
@@ -14,7 +15,7 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
 
         return when (responce.resultCode) {
             -1 -> {
-                Resource.Error("no internet")
+                Resource.Error(TypeError.NO_CONNECTION)
             }
             200 -> {
                 Resource.Succes((responce as TrackResponse).results
@@ -35,7 +36,7 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
                      )
             }
             else -> {
-                Resource.Error("error of server")
+                Resource.Error(TypeError.SERVER_ERROR)
             }
         }
 

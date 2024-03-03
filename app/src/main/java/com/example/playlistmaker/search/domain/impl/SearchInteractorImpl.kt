@@ -1,7 +1,7 @@
 package com.example.playlistmaker.search.domain.impl
 
 
-import com.example.playlistmaker.search.data.dto.Resource
+import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import java.util.concurrent.Executors
@@ -13,7 +13,7 @@ class SearchInteractorImpl(private val repository: SearchRepository) : TrackSear
         executor.execute {
             when(val resource = repository.search(expression)) {
                 is Resource.Succes -> {consumer.consume(resource.data, null)}
-                is Resource.Error -> {consumer.consume(null, resource.message)}
+                is Resource.Error -> {consumer.consume(null, resource.typeError)}
             }
         }
     }

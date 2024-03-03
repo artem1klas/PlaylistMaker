@@ -16,6 +16,10 @@ class PlayerViewModel(private val url: String) : ViewModel() {
 
     private val player = Creator.providePlayerInteractor()
 
+    private val dateFormat by lazy {
+        SimpleDateFormat("mm:ss", Locale.getDefault())
+    }
+
     val handler = Handler(Looper.getMainLooper())
 
     private val playerLiveData = MutableLiveData<PlayerState>(PlayerState.Default)
@@ -52,7 +56,7 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     }
 
     private fun getCurrentPosition(): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(player.getCurrentPosition())
+        return dateFormat.format(player.getCurrentPosition())
     }
 
     override fun onCleared() {

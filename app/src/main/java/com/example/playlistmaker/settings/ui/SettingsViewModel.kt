@@ -1,21 +1,17 @@
 package com.example.playlistmaker.settings.ui
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
-import com.example.playlistmaker.settings.domain.SettingsInteractorImpl
-import com.example.playlistmaker.sharing.data.ExternalNavigatorImpl
-import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
 
 class SettingsViewModel(
     application: Application
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val sharingInteractor = Creator.provideSharingInteractor(application)
     private val settingsInteractor = Creator.provideSettingsInteractor(application)

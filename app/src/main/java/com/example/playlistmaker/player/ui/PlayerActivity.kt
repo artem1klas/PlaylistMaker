@@ -3,8 +3,11 @@ package com.example.playlistmaker.player.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.MediaPlayerBinding
+import com.example.playlistmaker.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
@@ -14,7 +17,6 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var viewModel: PlayerViewModel
 
     private lateinit var track: Track
-    private var audioPlayerHolder: PlayerHolder? = null
     private lateinit var binding: MediaPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +25,22 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         track = getTrack(intent.getStringExtra(SELECTED_TRACK))
+
+        binding.trackName.text = track.trackName
+        binding.trackArtist.text = track.artistName
+        binding.trackTimeMillisValue.text = track.trackTimeMillis
+        binding.albumValue.text = track.collectionName
+        binding.yearValue.text = track.releaseDate
+        binding.genreValue.text = track.primaryGenreName
+        binding.countryValue.text = track.country
+
+        Glide.with(binding.root)
+            .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .placeholder(R.drawable.image_placeholdertrack)
+            .centerCrop()
+            .transform(RoundedCorners(dpToPx(8f, applicationContext)))
+            .into(binding.imageTrack)
+
 
         viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track.previewUrl))[PlayerViewModel::class.java]
         viewModel.observeState().observe(this) {
@@ -42,8 +60,6 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        audioPlayerHolder = PlayerHolder(binding, this)
-        audioPlayerHolder!!.bind(track)
         binding.currentTrackTime.text = CURENT_TRACK_TIME
 
         binding.arrowBack.setOnClickListener {

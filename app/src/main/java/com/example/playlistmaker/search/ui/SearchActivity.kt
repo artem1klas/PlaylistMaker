@@ -23,8 +23,6 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
     private lateinit var viewModel: SearchViewModel
 
-    private var lastInput = ""
-
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(this, tracks)
 
@@ -69,6 +67,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         }
 
         binding.updateButton.setOnClickListener {
+            val lastInput = (viewModel.observeState().value as SearchActivityState.NoConnection).lastInput
             viewModel.searchDebounce(lastInput)
         }
 
@@ -128,7 +127,6 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
             }
 
             is SearchActivityState.NoConnection -> {
-                this.lastInput = state.lastInput
                 binding.windowDisconnect.isVisible = true
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false

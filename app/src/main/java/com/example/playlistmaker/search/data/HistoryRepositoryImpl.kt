@@ -6,9 +6,9 @@ import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
-const val MAX_HISTORY_LIST_SIZE = 10
-const val HISTORY_KEY = "history_key"
-const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
+private const val MAX_HISTORY_LIST_SIZE = 10
+private const val HISTORY_KEY = "history_key"
+private const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
 
 class HistoryRepositoryImpl(val context: Context) : SearchHistoryRepository {
 

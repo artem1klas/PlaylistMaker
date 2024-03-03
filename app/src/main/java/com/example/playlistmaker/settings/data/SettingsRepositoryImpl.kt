@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.settings.domain.SettingsRepository
 
 
-const val APP_THEME_SHARED_PREFENCES = "dark_theme_preferences"
-const val IS_DARK_THEME_KEY = "key_for_dark_theme"
+private const val APP_THEME_SHARED_PREFENCES = "dark_theme_preferences"
+private const val IS_DARK_THEME_KEY = "key_for_dark_theme"
 
 class SettingsRepositoryImpl(context: Context) : SettingsRepository {
 
