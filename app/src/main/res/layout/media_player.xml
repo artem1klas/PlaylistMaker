@@ -20,7 +20,7 @@
         app:layout_constraintGuide_end="@dimen/contur_margin" />
 
     <Button
-        android:id="@+id/arrow_back"
+        android:id="@+id/arrowBack"
         style="@style/button_back"
         app:icon="@drawable/icon_arrow_back"
         app:layout_constraintStart_toEndOf="@id/startBorder"
@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toStartOf="@+id/endBorder"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@id/startBorder"
-        app:layout_constraintTop_toBottomOf="@id/arrow_back" />
+        app:layout_constraintTop_toBottomOf="@id/arrowBack" />
 
     <TextView
         android:id="@+id/trackName"

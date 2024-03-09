@@ -17,13 +17,14 @@
         android:paddingEnd="@dimen/contur_margin">
 
         <Button
-            android:id="@+id/back"
+            android:id="@+id/backButton"
             style="@style/button_back"
             app:icon="@drawable/icon_arrow_back" />
 
         <TextView
             style="@style/top_text"
             android:text="@string/search" />
+
     </LinearLayout>
 
     <FrameLayout
@@ -54,7 +55,7 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/clear"
+            android:id="@+id/clearButton"
             android:layout_width="48dp"
             android:layout_height="24dp"
             android:layout_gravity="end|center"
@@ -68,7 +69,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/window_disconnect"
+        android:id="@+id/windowDisconnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -89,7 +90,7 @@
             android:text="@string/problem_connect" />
 
         <Button
-            android:id="@+id/problem_updateButton"
+            android:id="@+id/updateButton"
             style="@style/problem_update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,7 +100,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/window_not_found"
+        android:id="@+id/windowNotFound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -122,7 +123,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/window_history"
+        android:id="@+id/windowHistory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -138,14 +139,14 @@
             android:text="@string/you_searched" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/hystory_trackList_recycle"
+            android:id="@+id/hystoryList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/history_text_recycler"
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button_clear_history"
+            android:id="@+id/clearHistoryButton"
             style="@style/problem_update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -155,13 +156,13 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/window_trackList"
+        android:id="@+id/windowTrackList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
     <ProgressBar
-        android:id="@+id/window_progressBar"
+        android:id="@+id/windowProgressBar"
         android:layout_width="@dimen/progressBar_size"
         android:layout_height="@dimen/progressBar_size"
         android:layout_gravity="center"
