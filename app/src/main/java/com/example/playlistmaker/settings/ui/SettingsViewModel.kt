@@ -1,20 +1,15 @@
 package com.example.playlistmaker.settings.ui
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.settings.domain.SettingsInteractor
+import com.example.playlistmaker.sharing.domain.SharingInteractor
 
 class SettingsViewModel(
-    application: Application
+    private val settingsInteractor: SettingsInteractor,
+    private val sharingInteractor: SharingInteractor,
 ) : ViewModel() {
-
-    private val sharingInteractor = Creator.provideSharingInteractor(application)
-    private val settingsInteractor = Creator.provideSettingsInteractor(application)
 
     private val switchOnLiveData = MutableLiveData<Boolean>()
     fun observeOnState(): LiveData<Boolean> = switchOnLiveData
@@ -40,12 +35,12 @@ class SettingsViewModel(
         sharingInteractor.openSupport()
     }
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SettingsViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
-            }
-        }
-    }
+//    companion object {
+//        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                SettingsViewModel(this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application)
+//            }
+//        }
+//    }
 
 }

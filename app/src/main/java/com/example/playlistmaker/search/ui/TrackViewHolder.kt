@@ -23,7 +23,6 @@ class TrackViewHolder(private val binding: TrackLayoutBinding) : RecyclerView.Vi
         itemView.setOnClickListener {
             listener
         }
-
     }
     interface OnItemClickListener {
         fun onClick(track: Track)

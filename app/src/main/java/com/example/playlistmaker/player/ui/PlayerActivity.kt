@@ -2,7 +2,6 @@ package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -10,14 +9,19 @@ import com.example.playlistmaker.databinding.MediaPlayerBinding
 import com.example.playlistmaker.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PlayerViewModel
 
     private lateinit var track: Track
     private lateinit var binding: MediaPlayerBinding
+
+    private val viewModel: PlayerViewModel by viewModel {
+        parametersOf(track?.previewUrl)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +45,6 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(dpToPx(8f, applicationContext)))
             .into(binding.imageTrack)
 
-
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track.previewUrl))[PlayerViewModel::class.java]
         viewModel.observeState().observe(this) {
             when(it) {
                 is PlayerState.Default -> {
