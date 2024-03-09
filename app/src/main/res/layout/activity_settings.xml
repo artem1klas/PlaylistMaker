@@ -16,7 +16,7 @@
         android:paddingBottom="16dp">
 
         <Button
-            android:id="@+id/settings_arrow_back"
+            android:id="@+id/buttonArrowBack"
             style="@style/button_back"
             app:icon="@drawable/icon_arrow_back" />
 
@@ -38,7 +38,7 @@
             android:text="@string/share" />
 
         <Button
-            android:id="@+id/settings_share"
+            android:id="@+id/buttonShare"
             style="@style/settings_frame_button"
             app:icon="@drawable/icon_share" />
     </FrameLayout>
@@ -50,7 +50,7 @@
             android:text="@string/call_support" />
 
         <Button
-            android:id="@+id/settings_support"
+            android:id="@+id/buttonSupport"
             style="@style/settings_frame_button"
             app:icon="@drawable/icon_support" />
     </FrameLayout>
@@ -62,7 +62,7 @@
             android:text="@string/user_agree" />
 
         <Button
-            android:id="@+id/settings_agreement"
+            android:id="@+id/buttonAgreement"
             style="@style/settings_frame_button"
             app:icon="@drawable/icon_arrow_forward" />
     </FrameLayout>
