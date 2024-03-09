@@ -3,7 +3,7 @@ package com.example.playlistmaker.search.domain.api
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TypeError
 
-interface SearchInteractor {
+interface TrackSearchInteractor {
     fun search(expression: String, consumer: TrackSearchConsumer)
 
 

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.search.data.network
+package com.example.playlistmaker.search.data
 
 import com.example.playlistmaker.search.data.dto.Response
 

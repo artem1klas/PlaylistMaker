@@ -1,23 +1,22 @@
 package com.example.playlistmaker.search.data
 
 import android.content.Context
-import android.content.SharedPreferences
-import com.example.playlistmaker.search.domain.api.HistoryRepository
+import android.content.Context.MODE_PRIVATE
+import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
 private const val MAX_HISTORY_LIST_SIZE = 10
 private const val HISTORY_KEY = "history_key"
+private const val HISTORY_SHARED_PREFENCES = "history_shared_preferences"
 
-class HistoryRepositoryImpl(
-    val context: Context,
-    val sharedPreferences: SharedPreferences,
-    val gson: Gson
-) : HistoryRepository {
+class HistoryRepositoryImpl(val context: Context) : SearchHistoryRepository {
+
+    val sharedPreferenc = context.getSharedPreferences(HISTORY_SHARED_PREFENCES, MODE_PRIVATE)
 
     override fun read(): List<Track> {
-        val json = this.sharedPreferences.getString(HISTORY_KEY, null) ?: return emptyList()
-        return gson.fromJson(json, Array<Track>::class.java).toList()
+        val json = sharedPreferenc.getString(HISTORY_KEY, null) ?: return emptyList()
+        return Gson().fromJson(json, Array<Track>::class.java).toList()
     }
 
     override fun add(track: Track) {
@@ -27,12 +26,12 @@ class HistoryRepositoryImpl(
         if (tempHistoryList.size > MAX_HISTORY_LIST_SIZE) {
             tempHistoryList = tempHistoryList.subList(0, MAX_HISTORY_LIST_SIZE)
         }
-        this.sharedPreferences.edit()
+        sharedPreferenc.edit()
             .putString(HISTORY_KEY, Gson().toJson(tempHistoryList))
             .apply()
     }
 
     override fun clear() {
-        this.sharedPreferences.edit().clear().apply()
+        sharedPreferenc.edit().clear().apply()
     }
 }
