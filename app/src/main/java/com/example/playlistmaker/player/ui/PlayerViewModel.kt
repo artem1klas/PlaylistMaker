@@ -6,15 +6,13 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.player.domain.PlayerInteractor
 import java.util.Locale
 
-class PlayerViewModel(private val url: String) : ViewModel() {
-
-    private val player = Creator.providePlayerInteractor()
+class PlayerViewModel(
+    private val url: String,
+    private val playerInteractor: PlayerInteractor
+) : ViewModel() {
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
@@ -26,24 +24,24 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     fun observeState(): LiveData<PlayerState> = playerLiveData
 
     fun preparePlayer() {
-        player.setDataSource(url)
-        player.prepareAsync()
-        player.setOnPreparedListener {
+        playerInteractor.setDataSource(url)
+        playerInteractor.prepareAsync()
+        playerInteractor.setOnPreparedListener {
             playerLiveData.postValue(PlayerState.Prepared)
         }
-        player.setOnCompletionListener {
+        playerInteractor.setOnCompletionListener {
             handler.removeCallbacks(updateTimeViewRunnable)
         }
     }
 
     fun startPlayer() {
-        player.start()
+        playerInteractor.start()
         playerLiveData.postValue(PlayerState.Playing(getCurrentPosition()))
         handler.post(updateTimeViewRunnable)
     }
 
     fun pausePlayer() {
-        player.pause()
+        playerInteractor.pause()
         playerLiveData.postValue(PlayerState.Paused(getCurrentPosition()))
         handler.removeCallbacks(updateTimeViewRunnable)
     }
@@ -56,20 +54,15 @@ class PlayerViewModel(private val url: String) : ViewModel() {
     }
 
     private fun getCurrentPosition(): String {
-        return dateFormat.format(player.getCurrentPosition())
+        return dateFormat.format(playerInteractor.getCurrentPosition())
     }
 
     override fun onCleared() {
         super.onCleared()
-        player.release()
+        playerInteractor.release()
     }
 
     companion object {
-        fun getViewModelFactory(url: String): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(url)
-            }
-        }
         private const val DELAY_MILLIS = 300L
     }
 

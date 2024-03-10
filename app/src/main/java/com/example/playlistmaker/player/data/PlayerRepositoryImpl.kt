@@ -1,10 +1,9 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.AudioPlayerReposotory
+import com.example.playlistmaker.player.domain.PlayerRepository
 
-class PlayerRepositoryImpl() : AudioPlayerReposotory {
-    val player = MediaPlayer()
+class PlayerRepositoryImpl(val player: MediaPlayer) : PlayerRepository {
 
     override fun prepareAsync() {
         player.prepareAsync()
