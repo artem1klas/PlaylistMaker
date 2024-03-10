@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,13 +27,7 @@ class SettingsActivity : AppCompatActivity() {
 
         viewModel.observeOnState().observe(this) {
             binding.themeSwitcher.isChecked = it
-            AppCompatDelegate.setDefaultNightMode(
-                if (it) {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                }
-            )
+            App.setDarkTheme(it)
         }
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, checked ->

@@ -14,23 +14,23 @@ import org.koin.dsl.module
 
 val interactorModule = module {
 
-    single<SearchInteractor>{
+    factory<SearchInteractor>{
         SearchInteractorImpl(get())
     }
 
-    single<HistoryInteractor>{
+    factory<HistoryInteractor>{
         HistoryInteractorImpl(get())
     }
 
-    single<PlayerInteractor>{
+    factory<PlayerInteractor>{
         PlayerInteractorImpl(get())
     }
 
-    single<SettingsInteractor>{
+    factory<SettingsInteractor>{
         SettingsInteractorImpl(get())
     }
 
-    single<SharingInteractor>{
+    factory<SharingInteractor>{
         SharingInteractorImpl(get())
     }
 }

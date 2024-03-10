@@ -24,11 +24,11 @@ val repositoryModule = module {
     }
 
     single<PlayerRepository> {
-        PlayerRepositoryImpl(get())
+        PlayerRepositoryImpl()
     }
 
     single<SettingsRepository> {
-        SettingsRepositoryImpl(get())
+        SettingsRepositoryImpl(androidContext())
     }
 
     single<ExternalNavigator> {
