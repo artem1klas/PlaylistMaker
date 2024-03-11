@@ -35,7 +35,4 @@ val repositoryModule = module {
         ExternalNavigatorImpl(androidContext())
     }
 
-    single {
-        SettingsRepositoryImpl(get())
-    }
 }
