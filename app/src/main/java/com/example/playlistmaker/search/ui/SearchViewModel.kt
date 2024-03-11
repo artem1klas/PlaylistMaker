@@ -1,27 +1,21 @@
 package com.example.playlistmaker.search.ui
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
-import com.example.playlistmaker.search.domain.api.TrackSearchInteractor
+import androidx.lifecycle.ViewModel
+import com.example.playlistmaker.search.domain.api.HistoryInteractor
+import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TypeError
 
 class SearchViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+    private val searchInteractor: SearchInteractor,
+    private val historyInteractor: HistoryInteractor
+) : ViewModel() {
 
-    private val searchInteractor = Creator.provideSearchInteractor(application)
-    private val historyInteractor = Creator.provideHistoryInteractor(application)
 
     val handler = Handler(Looper.getMainLooper())
 
@@ -72,7 +66,7 @@ class SearchViewModel(
             renderState(SearchActivityState.Loading)
         }
 
-        searchInteractor.search(input, object : TrackSearchInteractor.TrackSearchConsumer {
+        searchInteractor.search(input, object : SearchInteractor.TrackSearchConsumer {
             override fun consume(foundTracks: List<Track>?, typeError: TypeError?) {
                 when {
                     typeError != null -> {
@@ -106,16 +100,5 @@ class SearchViewModel(
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    SearchViewModel(
-                        this[APPLICATION_KEY] as Application
-                    )
-                }
-            }
     }
 }
-
-

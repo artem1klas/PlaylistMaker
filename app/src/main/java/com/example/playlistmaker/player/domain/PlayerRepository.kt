@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.domain
 
-interface AudioPlayerReposotory {
+interface PlayerRepository {
 
     fun prepareAsync()
 

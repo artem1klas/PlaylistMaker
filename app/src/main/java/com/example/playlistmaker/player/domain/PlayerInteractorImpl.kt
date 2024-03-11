@@ -1,6 +1,6 @@
 package com.example.playlistmaker.player.domain
 
-class PlayerInteractorImpl(val player: AudioPlayerReposotory): PlayerInteractor {
+class PlayerInteractorImpl(val player: PlayerRepository): PlayerInteractor {
        override fun prepareAsync() {
         player.prepareAsync()
     }

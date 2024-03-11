@@ -12,16 +12,16 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener {
 
-    private lateinit var viewModel: SearchViewModel
+    private  val viewModel by viewModel<SearchViewModel>()
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(this, tracks)
@@ -38,8 +38,6 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         handler = Handler(Looper.getMainLooper())
-
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
 
         binding.windowTrackList.layoutManager = LinearLayoutManager(this)
         binding.windowTrackList.adapter = adapter

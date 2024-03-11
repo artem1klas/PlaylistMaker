@@ -1,48 +1,51 @@
 package com.example.playlistmaker.player.data
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.player.domain.AudioPlayerReposotory
+import com.example.playlistmaker.player.domain.PlayerRepository
 
-class PlayerRepositoryImpl() : AudioPlayerReposotory {
-    val player = MediaPlayer()
+class PlayerRepositoryImpl : PlayerRepository {
 
+    private var player: MediaPlayer? = null
+
+    override fun setDataSource(url: String) {
+        player = MediaPlayer()
+        player?.setDataSource(url)
+    }
     override fun prepareAsync() {
-        player.prepareAsync()
+//        player = MediaPlayer()
+        player?.prepareAsync()
     }
 
     override fun start() {
-        player.start()
+        player?.start()
     }
 
     override fun pause() {
-        player.pause()
+        player?.pause()
     }
 
     override fun release() {
-        player.release()
+        player?.release()
+        player = null
     }
 
     override fun isPlaying(): Boolean {
-        return player.isPlaying()
+        return player?.isPlaying() ?: false
     }
 
     override fun getCurrentPosition(): Int {
-        return player.getCurrentPosition()
+        return player?.getCurrentPosition() ?: 0
     }
 
     override fun seekTo(position: Int) {
-        player.seekTo(position)
-    }
-
-    override fun setDataSource(url: String) {
-        player.setDataSource(url)
+        player?.seekTo(position)
     }
 
     override fun setOnPreparedListener(onPreparedListener: () -> Unit) {
-        player.setOnPreparedListener { onPreparedListener() }
+        player?.setOnPreparedListener { onPreparedListener() }
     }
 
     override fun setOnCompletionListener(onCompletionListener: () -> Unit) {
-        player.setOnCompletionListener { onCompletionListener() }
+        player?.setOnCompletionListener { onCompletionListener() }
     }
 }
