@@ -20,5 +20,10 @@
     <dimen name="player_distance_bottom_elements">20dp</dimen>
     <dimen name="progressBar_size">44dp</dimen>
     <dimen name="top_progressBar">140dp</dimen>
+    <dimen name="media_top_image">106dp</dimen>
+    <dimen name="media_image_text">16dp</dimen>
+    <dimen name="media_top_button">24dp</dimen>
+    <dimen name="media_button_image">46dp</dimen>
+
 
 </resources>
