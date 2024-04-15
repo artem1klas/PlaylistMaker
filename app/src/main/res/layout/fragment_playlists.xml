@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/updateButton"
+        style="@style/problem_update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/media_top_button"
+        android:text="@string/new_playlist" />
+
+    <ImageView
+        style="@style/window_not_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/media_button_image" />
+
+    <TextView
+        style="@style/problem_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/media_image_text"
+        android:text="@string/you_didnt_create_playlist" />
+
+
+</LinearLayout>

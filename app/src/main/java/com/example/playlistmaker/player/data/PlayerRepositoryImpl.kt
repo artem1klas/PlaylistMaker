@@ -12,7 +12,6 @@ class PlayerRepositoryImpl : PlayerRepository {
         player?.setDataSource(url)
     }
     override fun prepareAsync() {
-//        player = MediaPlayer()
         player?.prepareAsync()
     }
 
