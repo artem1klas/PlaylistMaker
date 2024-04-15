@@ -8,20 +8,29 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerActivity
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener {
+class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
+
+    companion object {
+        const val SELECTED_TRACK = "selected_track"
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+    }
 
     private  val viewModel by viewModel<SearchViewModel>()
+
+    private lateinit var binding: FragmentSearchBinding
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(this, tracks)
@@ -29,25 +38,26 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     private var handler: Handler? = null
     private var isClickAllowed = true
 
-    private lateinit var binding: ActivitySearchBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         handler = Handler(Looper.getMainLooper())
 
-        binding.windowTrackList.layoutManager = LinearLayoutManager(this)
+        binding.windowTrackList.layoutManager = LinearLayoutManager(requireContext())
         binding.windowTrackList.adapter = adapter
 
         binding.hystoryList.adapter = adapter
-        binding.hystoryList.layoutManager = LinearLayoutManager(this)
+        binding.hystoryList.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.backButton.setOnClickListener {
-            finish()
-        }
 
         binding.queryInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.queryInput.text.isNullOrEmpty()) {
@@ -58,7 +68,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         binding.clearButton.setOnClickListener {
             binding.queryInput.setText("")
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.clearButton.windowToken, 0)
             binding.queryInput.clearFocus()
             render(SearchActivityState.Empty)
@@ -75,7 +85,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
         binding.queryInput.addTextChangedListener(textWatcher)
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
@@ -173,19 +183,17 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     override fun onClick(track: Track) {
         if (clickDebounce()) {
             viewModel.addHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java)
+            val intent = Intent(requireContext(), PlayerActivity::class.java)
             intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
             startActivity(intent)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         textWatcher.let { binding.queryInput.removeTextChangedListener(it) }
 
     }
-    companion object {
-        const val SELECTED_TRACK = "selected_track"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-    }
+
+
 }
