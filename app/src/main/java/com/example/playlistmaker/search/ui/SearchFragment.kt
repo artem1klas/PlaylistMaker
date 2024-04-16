@@ -14,9 +14,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -24,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
 
     companion object {
-        const val SELECTED_TRACK = "selected_track"
+//        const val SELECTED_TRACK = "selected_track"
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
@@ -183,9 +185,15 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
     override fun onClick(track: Track) {
         if (clickDebounce()) {
             viewModel.addHistory(track)
-            val intent = Intent(requireContext(), PlayerActivity::class.java)
-            intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
-            startActivity(intent)
+            parentFragmentManager.commit {
+                replace(
+                R.id.rootFragmentContainerView,
+                PlayerFragment.newInstance(trackId = Gson().toJson(track))
+                )
+            }
+//            val intent = Intent(requireContext(), PlayerFragment::class.java)
+//            intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
+//            startActivity(intent)
         }
     }
 

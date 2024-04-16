@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.playlistmaker.databinding.ActivityMediaBinding
+import com.example.playlistmaker.databinding.FragmentMediaBinding
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MediaFragment: Fragment() {
 
-    private lateinit var binding: ActivityMediaBinding
+    private lateinit var binding: FragmentMediaBinding
 
     private lateinit var tabMediator: TabLayoutMediator
 
@@ -20,7 +19,7 @@ class MediaFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = ActivityMediaBinding.inflate(inflater, container, false)
+        binding = FragmentMediaBinding.inflate(inflater, container, false)
         return binding.root
     }
 

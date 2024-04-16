@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/color_another_background"
     android:orientation="vertical"
-
-    android:statusBarColor="@color/color_another_background">
+    android:statusBarColor="@color/color_another_background"
+    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
