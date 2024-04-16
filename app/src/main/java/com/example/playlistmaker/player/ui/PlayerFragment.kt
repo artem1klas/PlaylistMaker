@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -23,11 +24,8 @@ class PlayerFragment : Fragment() {
         const val CURENT_TRACK_TIME = "00:00"
         const val SELECTED_TRACK = "selected_track"
 
-        fun newInstance(trackId: String): Fragment {
-            return PlayerFragment().apply {
-                arguments = bundleOf(SELECTED_TRACK to trackId)
-            }
-        }
+        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
+
     }
 
 
@@ -96,6 +94,10 @@ class PlayerFragment : Fragment() {
 
         binding.likeButton.setOnClickListener {
             binding.likeButton.setImageResource(R.drawable.player_like_clicked)
+        }
+
+        binding.arrowBack.setOnClickListener {
+            findNavController().navigateUp()
         }
 
 
