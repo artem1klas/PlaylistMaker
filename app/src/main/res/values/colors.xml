@@ -8,11 +8,10 @@
     <color name="ligth_gray">#E6E8EB</color>
     <color name="strong_gray">#1A1B22</color>
 
-    <color name="color_main_background">@color/blue</color>
-    <color name="color_another_background">@color/white</color>
+    <color name="color_background">@color/white</color>
     <color name="color_search_textColorHint">@color/text_gray</color>
-    <color name="color_track_title">@color/black</color>
-    <color name="color_track_another">@color/text_gray</color>
+    <color name="color_text">@color/black</color>
+    <color name="color_text_another">@color/text_gray</color>
     <color name="color_player_button_second">@color/strong_gray</color>
 
 </resources>

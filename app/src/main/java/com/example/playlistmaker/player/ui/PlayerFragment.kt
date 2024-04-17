@@ -30,7 +30,8 @@ class PlayerFragment : Fragment() {
 
 
     private lateinit var track: Track
-    private lateinit var binding: FragmentPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(track?.previewUrl)
@@ -41,7 +42,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -103,7 +104,6 @@ class PlayerFragment : Fragment() {
 
     }
 
-
     private fun preparePlayer() {
         binding.playButton.setImageResource(R.drawable.player_play)
         binding.currentTrackTime.text = resources.getString(R.string.time_null)
@@ -140,7 +140,12 @@ class PlayerFragment : Fragment() {
         pausePlayer()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
+
 
 
 }

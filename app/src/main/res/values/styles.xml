@@ -118,6 +118,15 @@
     <style name="mediaPlayer_value">
         <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">@font/ys_text_regular</item>
-        <item name="android:textColor">@color/color_track_title</item>
+        <item name="android:textColor">@color/color_text</item>
+    </style>
+    <style name="bottomnavigation">
+        <item name="android:background">@color/color_background</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="itemTextColor">@color/bottomnavigation_element</item>
+        <item name="itemIconTint">@color/bottomnavigation_element</item>
+
     </style>
 </resources>

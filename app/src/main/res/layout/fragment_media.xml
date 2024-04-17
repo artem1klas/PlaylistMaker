@@ -2,40 +2,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/color_another_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background"
     android:orientation="vertical"
     android:paddingStart="@dimen/contur_margin"
     android:paddingEnd="@dimen/contur_margin"
     tools:context="com.example.playlistmaker.media.MediaFragment">
 
-    <LinearLayout
+
+    <TextView
+        style="@style/top_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp">
+        android:paddingBottom="16dp"
+        android:text="@string/media" />
 
-        <Button
-            android:id="@+id/buttonBackMedia"
-            style="@style/button_back"
-            app:icon="@drawable/icon_arrow_back" />
-
-        <TextView
-            style="@style/top_text"
-            android:text="@string/media" />
-    </LinearLayout>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_another_background"
+        android:background="@color/color_background"
+        app:tabIndicatorColor="@color/color_text"
         app:tabIndicatorFullWidth="true"
-        app:tabTextColor="@color/color_track_title"
-        app:tabIndicatorColor="@color/color_track_title"/>
+        app:tabTextColor="@color/color_text" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </LinearLayout>

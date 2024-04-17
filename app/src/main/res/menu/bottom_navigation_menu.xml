@@ -3,16 +3,16 @@
     <item
         android:id="@+id/searchFragment"
         android:icon="@drawable/ic_search"
-        android:title="Поиск"
+        android:title="@string/search"
         />
     <item
         android:id="@+id/mediaFragment"
         android:icon="@drawable/ic_media"
-        android:title="Медиатека"
+        android:title="@string/media"
         />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Настройки"
+        android:title="@string/settings"
         />
 </menu>
