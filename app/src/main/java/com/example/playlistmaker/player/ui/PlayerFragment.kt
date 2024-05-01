@@ -20,15 +20,6 @@ import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : Fragment() {
 
-    companion object {
-        const val CURENT_TRACK_TIME = "00:00"
-        const val SELECTED_TRACK = "selected_track"
-
-        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
-
-    }
-
-
     private lateinit var track: Track
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
@@ -67,16 +58,19 @@ class PlayerFragment : Fragment() {
             .into(binding.imageTrack)
 
         viewModel.observeState().observe(viewLifecycleOwner) {
-            when(it) {
+            when (it) {
                 is PlayerState.Default -> {
                     viewModel.preparePlayer()
                 }
+
                 is PlayerState.Prepared -> {
                     preparePlayer()
                 }
+
                 is PlayerState.Playing -> {
                     binding.currentTrackTime.text = it.time
                 }
+
                 is PlayerState.Paused -> {
                     binding.currentTrackTime.text = it.time
                 }
@@ -125,12 +119,15 @@ class PlayerFragment : Fragment() {
             is PlayerState.Playing -> {
                 pausePlayer()
             }
+
             is PlayerState.Prepared -> {
                 startPlayer()
             }
+
             is PlayerState.Paused -> {
                 startPlayer()
             }
+
             else -> {}
         }
     }
@@ -144,8 +141,15 @@ class PlayerFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
 
+    companion object {
+        const val CURENT_TRACK_TIME = "00:00"
+        const val SELECTED_TRACK = "selected_track"
 
+        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
+
+    }
 
 }

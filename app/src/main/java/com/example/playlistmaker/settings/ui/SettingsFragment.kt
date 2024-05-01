@@ -9,7 +9,6 @@ import com.example.playlistmaker.App
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class SettingsFragment : Fragment() {
 
     private val viewModel by viewModel<SettingsViewModel>()

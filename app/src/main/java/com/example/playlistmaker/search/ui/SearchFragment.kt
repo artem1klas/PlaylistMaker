@@ -28,9 +28,9 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 
-    private  val viewModel by viewModel<SearchViewModel>()
+    private val viewModel by viewModel<SearchViewModel>()
 
-    private  var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private val tracks = ArrayList<Track>()
@@ -94,6 +94,7 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
     private val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
+
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             binding.clearButton.visibility = clearButtonVisibility(p0)
             if (!p0.isNullOrEmpty()) {
@@ -102,6 +103,7 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
                 viewModel.readHistory()
             }
         }
+
         override fun afterTextChanged(p0: Editable?) {
         }
     }
@@ -187,10 +189,9 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
             findNavController().navigate(
                 R.id.action_searchFragment_to_playerFragment,
                 PlayerFragment.createArgs(trackId = Gson().toJson(track))
-                )
-            }
+            )
         }
-
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
