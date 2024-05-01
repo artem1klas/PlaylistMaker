@@ -27,22 +27,22 @@ class SearchViewModel(
 
     fun clearHistory() {
         historyInteractor.clear()
-        stateLiveData.postValue(SearchActivityState.Empty)
+        stateLiveData.postValue(SearchState.Empty)
     }
 
     fun readHistory(): List<Track> {
         val tracks = historyInteractor.read()
         if (tracks.isEmpty()) {
-            stateLiveData.postValue(SearchActivityState.Empty)
+            stateLiveData.postValue(SearchState.Empty)
         } else {
-            stateLiveData.postValue(SearchActivityState.History(tracks))
+            stateLiveData.postValue(SearchState.History(tracks))
         }
         return tracks
     }
 
 
     fun searchDebounce(changedText: String) {
-        if (lastSearchText == changedText && stateLiveData.value !is SearchActivityState.NoConnection) {
+        if (lastSearchText == changedText && stateLiveData.value !is SearchState.NoConnection) {
             return
         }
         this.lastSearchText = changedText
@@ -63,32 +63,32 @@ class SearchViewModel(
     fun search(input: String) {
 
         if (input.isNotEmpty()) {
-            renderState(SearchActivityState.Loading)
+            renderState(SearchState.Loading)
         }
 
         searchInteractor.search(input, object : SearchInteractor.TrackSearchConsumer {
             override fun consume(foundTracks: List<Track>?, typeError: TypeError?) {
                 when {
                     typeError != null -> {
-                        renderState(SearchActivityState.NoConnection(input))
+                        renderState(SearchState.NoConnection(input))
                     }
 
                     foundTracks.isNullOrEmpty() -> {
-                        renderState(SearchActivityState.NotFound)
+                        renderState(SearchState.NotFound)
                     }
 
                     else -> {
-                        renderState(SearchActivityState.Content(foundTracks))
+                        renderState(SearchState.Content(foundTracks))
                     }
                 }
             }
         })
     }
 
-    private val stateLiveData = MutableLiveData<SearchActivityState>(SearchActivityState.Empty)
-    fun observeState(): LiveData<SearchActivityState> = stateLiveData
+    private val stateLiveData = MutableLiveData<SearchState>(SearchState.Empty)
+    fun observeState(): LiveData<SearchState> = stateLiveData
 
-    private fun renderState(state: SearchActivityState) {
+    private fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
     }
 

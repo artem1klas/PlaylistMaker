@@ -4,28 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_another_background"
+    android:background="@color/color_background"
     android:orientation="vertical"
+    android:statusBarColor="@color/color_background"
+    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
 
-    android:statusBarColor="@color/color_another_background">
 
-    <LinearLayout
+    <TextView
+        style="@style/top_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:paddingStart="@dimen/contur_margin"
-        android:paddingEnd="@dimen/contur_margin">
+        android:paddingEnd="@dimen/contur_margin"
+        android:text="@string/search" />
 
-        <Button
-            android:id="@+id/backButton"
-            style="@style/button_back"
-            app:icon="@drawable/icon_arrow_back" />
-
-        <TextView
-            style="@style/top_text"
-            android:text="@string/search" />
-
-    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -168,6 +160,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/top_progressBar"
         android:indeterminateTint="@color/blue"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

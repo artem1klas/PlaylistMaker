@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_another_background"
+    android:background="@color/color_background"
     android:orientation="horizontal"
     android:paddingStart="4dp"
     android:paddingEnd="12dp">
@@ -14,7 +14,7 @@
         android:layout_width="@dimen/track_image"
         android:layout_height="@dimen/track_image"
         android:layout_margin="@dimen/element_border_8"
-        android:background="@color/color_another_background"
+        android:background="@color/color_background"
         android:src="@drawable/image_placeholdertrack" />
 
     <LinearLayout
@@ -28,11 +28,11 @@
             android:id="@+id/trackName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/color_another_background"
+            android:background="@color/color_background"
             android:ellipsize="end"
             android:fontFamily="@font/ys_text_regular"
             android:maxLines="1"
-            android:textColor="@color/color_track_title"
+            android:textColor="@color/color_text"
             android:textSize="16sp"
             tools:text="trackName" />
 
@@ -46,30 +46,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/color_another_background"
+                android:background="@color/color_background"
                 android:fontFamily="@font/ys_text_regular"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/color_track_another"
+                android:textColor="@color/color_text_another"
                 android:textSize="11sp"
                 tools:text="artistName" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/color_another_background"
+                android:background="@color/color_background"
                 android:fontFamily="@font/ys_text_regular"
                 android:text=" • "
-                android:textColor="@color/color_track_another"
+                android:textColor="@color/color_text_another"
                 android:textSize="11sp"/>
 
             <TextView
                 android:id="@+id/trackTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/color_another_background"
+                android:background="@color/color_background"
                 android:fontFamily="@font/ys_text_regular"
-                android:textColor="@color/color_track_another"
+                android:textColor="@color/color_text_another"
                 android:textSize="11sp"
                 tools:text="trackTime"/>
         </LinearLayout>
@@ -80,9 +80,9 @@
         android:layout_width="@dimen/button_size"
         android:layout_height="@dimen/button_size"
         android:layout_gravity="end|center"
-        app:backgroundTint="@color/color_another_background"
+        app:backgroundTint="@color/color_background"
         app:icon="@drawable/icon_arrow_forward"
         app:iconGravity="textEnd"
         app:iconSize="@dimen/icon_size"
-        app:iconTint="@color/color_track_another"/>
+        app:iconTint="@color/color_text_another"/>
 </LinearLayout>

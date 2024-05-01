@@ -1,11 +1,16 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.MediaPlayerBinding
+import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
@@ -13,22 +18,38 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
+
+    companion object {
+        const val CURENT_TRACK_TIME = "00:00"
+        const val SELECTED_TRACK = "selected_track"
+
+        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
+
+    }
 
 
     private lateinit var track: Track
-    private lateinit var binding: MediaPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(track?.previewUrl)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = MediaPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        track = getTrack(intent.getStringExtra(SELECTED_TRACK))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        track = getTrack(requireArguments().getString(SELECTED_TRACK))
 
         binding.trackName.text = track.trackName
         binding.trackArtist.text = track.artistName
@@ -42,10 +63,10 @@ class PlayerActivity : AppCompatActivity() {
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.image_placeholdertrack)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(8f, applicationContext)))
+            .transform(RoundedCorners(dpToPx(8f, requireContext())))
             .into(binding.imageTrack)
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             when(it) {
                 is PlayerState.Default -> {
                     viewModel.preparePlayer()
@@ -64,10 +85,6 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.currentTrackTime.text = CURENT_TRACK_TIME
 
-        binding.arrowBack.setOnClickListener {
-            finish()
-        }
-
         binding.addButton.setOnClickListener {
             binding.addButton.setImageResource(R.drawable.player_add_clicked)
         }
@@ -79,6 +96,12 @@ class PlayerActivity : AppCompatActivity() {
         binding.likeButton.setOnClickListener {
             binding.likeButton.setImageResource(R.drawable.player_like_clicked)
         }
+
+        binding.arrowBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+
     }
 
     private fun preparePlayer() {
@@ -117,10 +140,12 @@ class PlayerActivity : AppCompatActivity() {
         pausePlayer()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
 
-    companion object {
-        const val CURENT_TRACK_TIME = "00:00"
-        const val SELECTED_TRACK = "selected_track"
-    }
+
+
 }

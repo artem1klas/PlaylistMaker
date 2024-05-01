@@ -2,26 +2,36 @@ package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.player.ui.PlayerActivity
+import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.FragmentSearchBinding
+import com.example.playlistmaker.player.ui.PlayerFragment
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener {
+class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+    }
 
     private  val viewModel by viewModel<SearchViewModel>()
+
+    private  var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(this, tracks)
@@ -29,25 +39,26 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     private var handler: Handler? = null
     private var isClickAllowed = true
 
-    private lateinit var binding: ActivitySearchBinding
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         handler = Handler(Looper.getMainLooper())
 
-        binding.windowTrackList.layoutManager = LinearLayoutManager(this)
+        binding.windowTrackList.layoutManager = LinearLayoutManager(requireContext())
         binding.windowTrackList.adapter = adapter
 
         binding.hystoryList.adapter = adapter
-        binding.hystoryList.layoutManager = LinearLayoutManager(this)
+        binding.hystoryList.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.backButton.setOnClickListener {
-            finish()
-        }
 
         binding.queryInput.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus && binding.queryInput.text.isNullOrEmpty()) {
@@ -58,14 +69,14 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
         binding.clearButton.setOnClickListener {
             binding.queryInput.setText("")
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.clearButton.windowToken, 0)
             binding.queryInput.clearFocus()
-            render(SearchActivityState.Empty)
+            render(SearchState.Empty)
         }
 
         binding.updateButton.setOnClickListener {
-            val lastInput = (viewModel.observeState().value as SearchActivityState.NoConnection).lastInput
+            val lastInput = (viewModel.observeState().value as SearchState.NoConnection).lastInput
             viewModel.searchDebounce(lastInput)
         }
 
@@ -75,7 +86,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
 
         binding.queryInput.addTextChangedListener(textWatcher)
 
-        viewModel.observeState().observe(this) {
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
     }
@@ -96,9 +107,9 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun render(state: SearchActivityState) {
+    fun render(state: SearchState) {
         when (state) {
-            is SearchActivityState.Empty -> {
+            is SearchState.Empty -> {
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
@@ -106,7 +117,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is SearchActivityState.Content -> {
+            is SearchState.Content -> {
                 tracks.clear()
                 tracks.addAll(state.tracks)
                 binding.windowDisconnect.isVisible = false
@@ -116,7 +127,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is SearchActivityState.NotFound -> {
+            is SearchState.NotFound -> {
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = true
                 binding.windowTrackList.isVisible = false
@@ -124,7 +135,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is SearchActivityState.NoConnection -> {
+            is SearchState.NoConnection -> {
                 binding.windowDisconnect.isVisible = true
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
@@ -132,7 +143,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is SearchActivityState.History -> {
+            is SearchState.History -> {
                 tracks.clear()
                 tracks.addAll(state.tracks)
                 binding.windowDisconnect.isVisible = false
@@ -142,7 +153,7 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
                 binding.windowProgressBar.isVisible = false
             }
 
-            is SearchActivityState.Loading -> {
+            is SearchState.Loading -> {
                 binding.windowDisconnect.isVisible = false
                 binding.windowNotFound.isVisible = false
                 binding.windowTrackList.isVisible = false
@@ -173,19 +184,19 @@ class SearchActivity : AppCompatActivity(), TrackViewHolder.OnItemClickListener 
     override fun onClick(track: Track) {
         if (clickDebounce()) {
             viewModel.addHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra(SELECTED_TRACK, Gson().toJson(track))
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_playerFragment,
+                PlayerFragment.createArgs(trackId = Gson().toJson(track))
+                )
+            }
         }
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         textWatcher.let { binding.queryInput.removeTextChangedListener(it) }
+        _binding = null
+    }
 
-    }
-    companion object {
-        const val SELECTED_TRACK = "selected_track"
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-    }
+
 }
