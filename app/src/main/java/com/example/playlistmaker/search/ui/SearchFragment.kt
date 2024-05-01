@@ -13,31 +13,34 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.player.ui.PlayerFragment
+import com.example.playlistmaker.root.RootActivity
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
-    }
+class SearchFragment : Fragment(){
 
     private val viewModel by viewModel<SearchViewModel>()
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
     private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(this, tracks)
-
-    private var handler: Handler? = null
-    private var isClickAllowed = true
+    private val adapter = TrackAdapter(tracks){ track ->
+        (activity as RootActivity).animateBottomNavigationView()
+        onTrackClickDebounce(track)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,8 +53,6 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        handler = Handler(Looper.getMainLooper())
 
         binding.windowTrackList.layoutManager = LinearLayoutManager(requireContext())
         binding.windowTrackList.adapter = adapter
@@ -88,6 +89,14 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
 
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY_MILLIS, viewLifecycleOwner.lifecycleScope, false) {track ->
+            viewModel.addHistory(track)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_playerFragment,
+                PlayerFragment.createArgs(trackId = Gson().toJson(track))
+            )
         }
     }
 
@@ -174,30 +183,14 @@ class SearchFragment : Fragment(), TrackViewHolder.OnItemClickListener {
         }
     }
 
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler?.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY_MILLIS)
-        }
-        return current
-    }
-
-    override fun onClick(track: Track) {
-        if (clickDebounce()) {
-            viewModel.addHistory(track)
-            findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
-                PlayerFragment.createArgs(trackId = Gson().toJson(track))
-            )
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         textWatcher.let { binding.queryInput.removeTextChangedListener(it) }
         _binding = null
     }
 
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+    }
 
 }

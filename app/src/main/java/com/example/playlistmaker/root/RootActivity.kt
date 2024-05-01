@@ -3,13 +3,10 @@ package com.example.playlistmaker.root
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityRootBinding
-import com.example.playlistmaker.search.ui.SearchFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class RootActivity : AppCompatActivity() {
 
@@ -38,5 +35,9 @@ class RootActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun animateBottomNavigationView() {
+        binding.bottomNavigationView.visibility = View.GONE
     }
 }

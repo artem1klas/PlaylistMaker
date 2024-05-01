@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.utils
 
 import android.content.Context
 import android.util.TypedValue
@@ -10,3 +10,4 @@ fun dpToPx(dp: Float, context: Context): Int {
         context.resources.displayMetrics
     ).toInt()
 }
+

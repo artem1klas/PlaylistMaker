@@ -5,12 +5,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.TrackLayoutBinding
-import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.utils.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 
 class TrackViewHolder(private val binding: TrackLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 {
-    fun bind(track: Track, listener: OnItemClickListener) {
+    fun bind(track: Track) {
         binding.trackName.text = track.trackName
         binding.trackTime.text = track.trackTimeMillis
         binding.artistName.text = track.artistName
@@ -20,9 +20,6 @@ class TrackViewHolder(private val binding: TrackLayoutBinding) : RecyclerView.Vi
             .fitCenter()
             .transform(RoundedCorners(dpToPx(2f, itemView.context)))
             .into(binding.trackImage)
-        itemView.setOnClickListener {
-            listener
-        }
 
     }
     interface OnItemClickListener {
