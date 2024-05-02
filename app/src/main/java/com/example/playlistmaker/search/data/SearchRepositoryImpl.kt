@@ -8,36 +8,40 @@ import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.domain.api.SearchRepository
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TypeError
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.Locale
 
 class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRepository {
-    override fun search(expression: String): Resource<List<Track>> {
+    override fun search(expression: String): Flow<Resource<List<Track>>> = flow {
         val responce = networkClient.doRequest(TrackSearchRequest(expression))
 
-        return when (responce.resultCode) {
+        when (responce.resultCode) {
             -1 -> {
-                Resource.Error(TypeError.NO_CONNECTION)
+                emit(Resource.Error(TypeError.NO_CONNECTION))
             }
             200 -> {
-                Resource.Succes((responce as TrackResponse).results
-                    .map {
-                        Track(
-                            trackId = it.trackId ?: "-1",
-                            trackName = it.trackName ?: "",
-                            artistName = it.artistName ?.trim() ?: "",
-                            trackTimeMillis = timeFormatter(it.trackTimeMillis),
-                            artworkUrl100 = it.artworkUrl100,
-                            collectionName = it.collectionName ?: "",
-                            releaseDate = it.releaseDate?.substring(0, 4) ?: "",
-                            primaryGenreName = it.primaryGenreName ?: "",
-                            country = it.country ?: "",
-                            previewUrl = it.previewUrl ?: it.artworkUrl100
-                        )
-                    }
-                )
+                with(responce as TrackResponse) {
+                    val data = results
+                        .map {
+                            Track(
+                                trackId = it.trackId ?: "-1",
+                                trackName = it.trackName ?: "",
+                                artistName = it.artistName ?.trim() ?: "",
+                                trackTimeMillis = timeFormatter(it.trackTimeMillis),
+                                artworkUrl100 = it.artworkUrl100,
+                                collectionName = it.collectionName ?: "",
+                                releaseDate = it.releaseDate?.substring(0, 4) ?: "",
+                                primaryGenreName = it.primaryGenreName ?: "",
+                                country = it.country ?: "",
+                                previewUrl = it.previewUrl ?: it.artworkUrl100
+                            )
+                        }
+                    emit(Resource.Succes(data))
+                }
             }
             else -> {
-                Resource.Error(TypeError.SERVER_ERROR)
+                emit(Resource.Error(TypeError.SERVER_ERROR))
             }
         }
 

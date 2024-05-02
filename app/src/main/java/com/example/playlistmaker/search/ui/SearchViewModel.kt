@@ -9,6 +9,7 @@ import com.example.playlistmaker.search.domain.api.SearchInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TypeError
 import com.example.playlistmaker.utils.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
@@ -17,9 +18,10 @@ class SearchViewModel(
 
     private var lastSearchText: String? = null
 
-    private val trackSearchDebounce = debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { changedText ->
-        search(changedText)
-    }
+    private val trackSearchDebounce =
+        debounce<String>(SEARCH_DEBOUNCE_DELAY, viewModelScope, true) { changedText ->
+            search(changedText)
+        }
 
     fun addHistory(track: Track) {
         historyInteractor.add(track)
@@ -41,11 +43,10 @@ class SearchViewModel(
     }
 
     fun searchDebounce(changedText: String) {
-        if(lastSearchText != changedText){
+        if (lastSearchText != changedText) {
             lastSearchText = changedText
             trackSearchDebounce(changedText)
         }
-
     }
 
     fun search(input: String) {
@@ -54,23 +55,35 @@ class SearchViewModel(
             renderState(SearchState.Loading)
         }
 
-        searchInteractor.search(input, object : SearchInteractor.TrackSearchConsumer {
-            override fun consume(foundTracks: List<Track>?, typeError: TypeError?) {
-                when {
-                    typeError != null -> {
-                        renderState(SearchState.NoConnection(input))
-                    }
-
-                    foundTracks.isNullOrEmpty() -> {
-                        renderState(SearchState.NotFound)
-                    }
-
-                    else -> {
-                        renderState(SearchState.Content(foundTracks))
-                    }
+        viewModelScope.launch {
+            searchInteractor
+                .search(input)
+                .collect { pair ->
+                    processResult(input, pair.first, pair.second)
                 }
+        }
+    }
+
+    private fun processResult(input: String, foundTracks: List<Track>?, typeError: TypeError?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
+
+
+        when {
+            typeError != null -> {
+                renderState(SearchState.NoConnection(input))
             }
-        })
+
+            foundTracks.isNullOrEmpty() -> {
+                renderState(SearchState.NotFound)
+            }
+
+            else -> {
+                renderState(SearchState.Content(foundTracks))
+            }
+        }
     }
 
     private val stateLiveData = MutableLiveData<SearchState>(SearchState.Empty)
