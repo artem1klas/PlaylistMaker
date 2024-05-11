@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
-import com.example.playlistmaker.dpToPx
+import com.example.playlistmaker.utils.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -19,15 +19,6 @@ import org.koin.core.parameter.parametersOf
 
 
 class PlayerFragment : Fragment() {
-
-    companion object {
-        const val CURENT_TRACK_TIME = "00:00"
-        const val SELECTED_TRACK = "selected_track"
-
-        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
-
-    }
-
 
     private lateinit var track: Track
     private var _binding: FragmentPlayerBinding? = null
@@ -67,30 +58,17 @@ class PlayerFragment : Fragment() {
             .into(binding.imageTrack)
 
         viewModel.observeState().observe(viewLifecycleOwner) {
-            when(it) {
-                is PlayerState.Default -> {
-                    viewModel.preparePlayer()
+                binding.playButton.isEnabled = it.isPlayButtonEnabled
+                    binding.currentTrackTime.text = it.progress
+                if (it.isButtonPlay){
+                    binding.playButton.setImageResource(R.drawable.player_play)
+            } else {
+                    binding.playButton.setImageResource(R.drawable.player_play_clicked)
                 }
-                is PlayerState.Prepared -> {
-                    preparePlayer()
-                }
-                is PlayerState.Playing -> {
-                    binding.currentTrackTime.text = it.time
-                }
-                is PlayerState.Paused -> {
-                    binding.currentTrackTime.text = it.time
-                }
-            }
         }
-
-        binding.currentTrackTime.text = CURENT_TRACK_TIME
 
         binding.addButton.setOnClickListener {
             binding.addButton.setImageResource(R.drawable.player_add_clicked)
-        }
-
-        binding.playButton.setOnClickListener {
-            playbackControl()
         }
 
         binding.likeButton.setOnClickListener {
@@ -101,51 +79,24 @@ class PlayerFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-
-    }
-
-    private fun preparePlayer() {
-        binding.playButton.setImageResource(R.drawable.player_play)
-        binding.currentTrackTime.text = resources.getString(R.string.time_null)
-        binding.playButton.isEnabled = true
-    }
-
-    private fun startPlayer() {
-        viewModel.startPlayer()
-        binding.playButton.setImageResource(R.drawable.player_play_clicked)
-    }
-
-    private fun pausePlayer() {
-        viewModel.pausePlayer()
-        binding.playButton.setImageResource(R.drawable.player_play)
-    }
-
-    private fun playbackControl() {
-        when (viewModel.observeState().value) {
-            is PlayerState.Playing -> {
-                pausePlayer()
-            }
-            is PlayerState.Prepared -> {
-                startPlayer()
-            }
-            is PlayerState.Paused -> {
-                startPlayer()
-            }
-            else -> {}
+        binding.playButton.setOnClickListener {
+            viewModel.playButtonClicked()
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        pausePlayer()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
 
+    companion object {
+        const val SELECTED_TRACK = "selected_track"
 
+        fun createArgs(trackId: String): Bundle = bundleOf(SELECTED_TRACK to trackId)
+
+    }
 
 }
