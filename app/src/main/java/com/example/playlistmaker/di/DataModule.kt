@@ -1,6 +1,9 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.example.playlistmaker.media.data.db.AppDatabase
 import com.example.playlistmaker.search.data.network.ITunesApiService
 import com.example.playlistmaker.search.data.network.NetworkClient
 import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -36,6 +39,10 @@ val dataModule = module {
             PLAYLISTMAKER_SHARED_PREFENCES,
             Context.MODE_PRIVATE
         )
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
     }
 
 }
