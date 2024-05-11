@@ -38,7 +38,6 @@ class SearchFragment : Fragment(){
 
     private val tracks = ArrayList<Track>()
     private val adapter = TrackAdapter(tracks){ track ->
-        (activity as RootActivity).animateBottomNavigationView()
         onTrackClickDebounce(track)
     }
 

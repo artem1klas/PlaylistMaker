@@ -22,7 +22,7 @@ class PlayerViewModel(
 
     private var timerJob: Job? = null
 
-    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
+    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default(getCurrentPosition()))
     fun observeState(): LiveData<PlayerState> = playerState
 
     init {
@@ -33,10 +33,10 @@ class PlayerViewModel(
         playerInteractor.setDataSource(url)
         playerInteractor.prepareAsync()
         playerInteractor.setOnPreparedListener {
-            playerState.postValue(PlayerState.Prepared())
+            playerState.postValue(PlayerState.Prepared(getCurrentPosition()))
         }
         playerInteractor.setOnCompletionListener {
-           playerState.postValue(PlayerState.Default())
+           playerState.postValue(PlayerState.Default(getCurrentPosition()))
         }
     }
 
@@ -87,7 +87,7 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        playerState.value = PlayerState.Default()
+        playerState.value = PlayerState.Default(getCurrentPosition())
     }
 
     companion object {
