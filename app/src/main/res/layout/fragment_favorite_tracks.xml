@@ -1,21 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-    <ImageView
-        style="@style/window_not_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/media_top_image" />
-
-    <TextView
-        style="@style/problem_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/media_image_text"
-        android:text="@string/your_mediateca_empty" />
+    android:layout_height="match_parent">
 
 
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        <ImageView
+            style="@style/window_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/media_top_image" />
+
+        <TextView
+            style="@style/problem_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/media_image_text"
+            android:text="@string/your_mediateca_empty" />
+
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/windowTrackList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:ignore="DuplicateIds" />
+
+    <ProgressBar
+        android:id="@+id/windowProgressBar"
+        android:layout_width="@dimen/progressBar_size"
+        android:layout_height="@dimen/progressBar_size"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/top_progressBar"
+        android:indeterminateTint="@color/blue"
+        android:visibility="gone" />
+
+
+</FrameLayout>

@@ -1,11 +1,10 @@
-package com.example.playlistmaker.media.data.db
+package com.example.playlistmaker.media.data
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.playlistmaker.search.domain.models.Track
 
 @Dao
 interface TrackDao {
