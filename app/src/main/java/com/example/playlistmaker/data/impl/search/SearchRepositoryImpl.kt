@@ -1,9 +1,6 @@
 package com.example.playlistmaker.data.impl.search
 
-import android.icu.text.SimpleDateFormat
 import com.example.playlistmaker.data.converters.TrackDtoConvertor
-import com.example.playlistmaker.data.db.TrackEntity
-import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.data.dto.TrackResponse
 import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.network.NetworkClient
@@ -13,7 +10,6 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.models.TypeError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.Locale
 
 class SearchRepositoryImpl(
     private val networkClient: NetworkClient,
