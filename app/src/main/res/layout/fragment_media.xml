@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/contur_margin"
     android:paddingEnd="@dimen/contur_margin"
-    tools:context="com.example.playlistmaker.media.ui.MediaFragment">
+    tools:context="com.example.playlistmaker.ui.media.MediaFragment">
 
 
     <TextView

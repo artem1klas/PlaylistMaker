@@ -1,17 +1,17 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
-import com.example.playlistmaker.media.domain.FavoriteTrackInteractorImpl
-import com.example.playlistmaker.player.domain.PlayerInteractor
-import com.example.playlistmaker.player.domain.PlayerInteractorImpl
-import com.example.playlistmaker.search.domain.api.HistoryInteractor
-import com.example.playlistmaker.search.domain.api.SearchInteractor
-import com.example.playlistmaker.search.domain.impl.HistoryInteractorImpl
-import com.example.playlistmaker.search.domain.impl.SearchInteractorImpl
-import com.example.playlistmaker.settings.domain.SettingsInteractor
-import com.example.playlistmaker.settings.domain.SettingsInteractorImpl
-import com.example.playlistmaker.sharing.domain.SharingInteractor
-import com.example.playlistmaker.sharing.domain.SharingInteractorImpl
+import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackInteractor
+import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackInteractorImpl
+import com.example.playlistmaker.domain.api_impl.player.PlayerInteractor
+import com.example.playlistmaker.domain.api_impl.player.PlayerInteractorImpl
+import com.example.playlistmaker.domain.api_impl.search.HistoryInteractor
+import com.example.playlistmaker.domain.api_impl.search.SearchInteractor
+import com.example.playlistmaker.domain.api_impl.search.HistoryInteractorImpl
+import com.example.playlistmaker.domain.api_impl.search.SearchInteractorImpl
+import com.example.playlistmaker.domain.api_impl.settings.SettingsInteractor
+import com.example.playlistmaker.domain.api_impl.settings.SettingsInteractorImpl
+import com.example.playlistmaker.domain.api_impl.settings.SharingInteractor
+import com.example.playlistmaker.domain.api_impl.settings.SharingInteractorImpl
 import org.koin.dsl.module
 
 val interactorModule = module {
