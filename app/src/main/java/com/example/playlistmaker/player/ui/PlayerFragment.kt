@@ -11,6 +11,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
+import com.example.playlistmaker.media.domain.FavoriteTrackInteractorImpl
 import com.example.playlistmaker.utils.dpToPx
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
@@ -25,7 +27,7 @@ class PlayerFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PlayerViewModel by viewModel {
-        parametersOf(track?.previewUrl)
+        parametersOf(track)
     }
 
     override fun onCreateView(
@@ -58,21 +60,29 @@ class PlayerFragment : Fragment() {
             .into(binding.imageTrack)
 
         viewModel.observeState().observe(viewLifecycleOwner) {
-                binding.playButton.isEnabled = it.isPlayButtonEnabled
-                    binding.currentTrackTime.text = it.progress
-                if (it.isButtonPlay){
-                    binding.playButton.setImageResource(R.drawable.player_play)
+            binding.playButton.isEnabled = it.isPlayButtonEnabled
+            binding.currentTrackTime.text = it.progress
+            if (it.isButtonPlay) {
+                binding.playButton.setImageResource(R.drawable.player_play)
             } else {
-                    binding.playButton.setImageResource(R.drawable.player_play_clicked)
-                }
+                binding.playButton.setImageResource(R.drawable.player_play_clicked)
+            }
+            if (it.isLiked){
+                binding.likeButton.setImageResource(R.drawable.player_like_clicked)
+            } else {
+                binding.likeButton.setImageResource(R.drawable.player_like)
+            }
+
         }
+
+
 
         binding.addButton.setOnClickListener {
             binding.addButton.setImageResource(R.drawable.player_add_clicked)
         }
 
         binding.likeButton.setOnClickListener {
-            binding.likeButton.setImageResource(R.drawable.player_like_clicked)
+            viewModel.likeButtonClicked()
         }
 
         binding.arrowBack.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.example.playlistmaker.search.data
 
 import android.icu.text.SimpleDateFormat
+import com.example.playlistmaker.media.data.AppDatabase
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.data.dto.TrackResponse
 import com.example.playlistmaker.search.data.dto.TrackSearchRequest
@@ -34,7 +35,7 @@ class SearchRepositoryImpl(private val networkClient: NetworkClient) : SearchRep
                                 releaseDate = it.releaseDate?.substring(0, 4) ?: "",
                                 primaryGenreName = it.primaryGenreName ?: "",
                                 country = it.country ?: "",
-                                previewUrl = it.previewUrl ?: it.artworkUrl100
+                                previewUrl = it.previewUrl ?: it.artworkUrl100,
                             )
                         }
                     emit(Resource.Succes(data))

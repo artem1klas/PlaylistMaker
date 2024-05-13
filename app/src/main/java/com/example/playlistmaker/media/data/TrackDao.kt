@@ -17,7 +17,7 @@ interface TrackDao {
     @Query("SELECT * FROM track_table")
     suspend fun getTracks(): List<TrackEntity>
 
-//    @Query
-//    fun getIdFavoriteTracks()
+    @Query("SELECT trackId FROM track_table")
+    suspend fun getIdFavoriteTracks(): List<String>
 
 }

@@ -5,38 +5,59 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.playlistmaker.media.domain.FavoriteTrackInteractor
 import com.example.playlistmaker.player.domain.PlayerInteractor
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 class PlayerViewModel(
-    private val url: String,
-    private val playerInteractor: PlayerInteractor
+    private val track: Track,
+    private val playerInteractor: PlayerInteractor,
+    private val favoriteTrackInteractor: FavoriteTrackInteractor
 ) : ViewModel() {
 
     private val dateFormat by lazy {
         SimpleDateFormat("mm:ss", Locale.getDefault())
     }
 
+    private var trackIsLicked = false
+
     private var timerJob: Job? = null
 
-    private val playerState = MutableLiveData<PlayerState>(PlayerState.Default(getCurrentPosition()))
+    private val playerState =
+        MutableLiveData<PlayerState>(PlayerState.Default(getCurrentPosition(), trackIsLicked))
+
     fun observeState(): LiveData<PlayerState> = playerState
+
 
     init {
         preparePlayer()
+
+        viewModelScope.launch {
+            favoriteTrackInteractor
+                .getIdFavoriteTracks()
+                .collect { idTracks ->
+                    if (idTracks.contains(track.trackId)) {
+                        trackIsLicked = true
+                    }
+                }
+
+        }
     }
 
+
     fun preparePlayer() {
-        playerInteractor.setDataSource(url)
+        playerInteractor.setDataSource(track.previewUrl)
         playerInteractor.prepareAsync()
+
         playerInteractor.setOnPreparedListener {
-            playerState.postValue(PlayerState.Prepared(getCurrentPosition()))
+            playerState.postValue(PlayerState.Prepared(getCurrentPosition(), trackIsLicked))
         }
         playerInteractor.setOnCompletionListener {
-           playerState.postValue(PlayerState.Default(getCurrentPosition()))
+            playerState.postValue(PlayerState.Default(getCurrentPosition(), trackIsLicked))
         }
     }
 
@@ -59,17 +80,34 @@ class PlayerViewModel(
         }
     }
 
+    fun likeButtonClicked() {
+
+        viewModelScope.launch {
+            if (trackIsLicked) {
+                favoriteTrackInteractor.removeTrack(track)
+            } else {
+                favoriteTrackInteractor.addTrack(track)
+            }
+        }
+
+        playerState.postValue(playerState.value?.apply {
+            isLiked = !trackIsLicked
+        })
+        trackIsLicked = !trackIsLicked
+    }
+
     fun startPlayer() {
         playerInteractor.start()
-        playerState.postValue(PlayerState.Playing(getCurrentPosition()))
+        playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked))
         startTimer()
     }
 
+
     private fun startTimer() {
         timerJob = viewModelScope.launch {
-            while (playerInteractor.isPlaying()){
+            while (playerInteractor.isPlaying()) {
                 delay(DELAY_MILLIS)
-                playerState.postValue(PlayerState.Playing(getCurrentPosition()))
+                playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked))
             }
         }
     }
@@ -77,7 +115,7 @@ class PlayerViewModel(
     fun pausePlayer() {
         playerInteractor.pause()
         timerJob?.cancel()
-        playerState.postValue(PlayerState.Paused(getCurrentPosition()))
+        playerState.postValue(PlayerState.Paused(getCurrentPosition(), trackIsLicked))
     }
 
     private fun getCurrentPosition(): String {
@@ -87,7 +125,7 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        playerState.value = PlayerState.Default(getCurrentPosition())
+        playerState.value = PlayerState.Default(getCurrentPosition(), trackIsLicked)
     }
 
     companion object {

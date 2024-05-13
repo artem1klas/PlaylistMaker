@@ -63,7 +63,7 @@ class FavoriteTracksFragment: Fragment() {
 
         onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY_MILLIS, viewLifecycleOwner.lifecycleScope, false) { track ->
             findNavController().navigate(
-                R.id.action_searchFragment_to_playerFragment,
+                R.id.action_mediaFragment_to_playerFragment,
                 PlayerFragment.createArgs(trackId = Gson().toJson(track))
             )
         }
@@ -82,7 +82,7 @@ class FavoriteTracksFragment: Fragment() {
 
             is FavoriteState.Content -> {
                 tracks.clear()
-                tracks.addAll(state.tracks)
+                tracks.addAll(state.tracks.reversed())
                 binding.empty.isVisible = false
                 binding.windowTrackList.isVisible = true
                 binding.windowProgressBar.isVisible = false

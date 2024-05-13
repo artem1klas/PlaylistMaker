@@ -17,4 +17,8 @@ class FavoriteTrackInteractorImpl(
     override fun getTracks(): Flow<List<Track>> {
         return favoriteTrackRepository.getTracks()
     }
+
+    override fun getIdFavoriteTracks(): Flow<List<String>> {
+        return favoriteTrackRepository.getIdFavoriteTracks()
+    }
 }
