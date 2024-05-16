@@ -10,7 +10,7 @@ class TrackDtoConvertor {
     fun map(track: TrackDto): Track {
         return Track(
             trackId = track.trackId ?: "-1",
-            trackName = track.trackName ?: "",
+            trackName = track.trackName?.trim() ?: "",
             artistName = track.artistName?.trim() ?: "",
             trackTimeMillis = timeFormatter(track.trackTimeMillis),
             artworkUrl100 = track.artworkUrl100,

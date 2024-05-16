@@ -22,7 +22,4 @@ class TrackViewHolder(private val binding: TrackLayoutBinding) : RecyclerView.Vi
             .into(binding.trackImage)
 
     }
-    interface OnItemClickListener {
-        fun onClick(track: Track)
-    }
 }

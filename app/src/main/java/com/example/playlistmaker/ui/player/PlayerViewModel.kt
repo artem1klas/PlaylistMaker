@@ -55,7 +55,8 @@ class PlayerViewModel(
             playerState.postValue(PlayerState.Prepared(getCurrentPosition(), trackIsLicked))
         }
         playerInteractor.setOnCompletionListener {
-            playerState.postValue(PlayerState.Default(getCurrentPosition(), trackIsLicked))
+            timerJob?.cancel()
+            preparePlayer()
         }
     }
 
@@ -123,7 +124,7 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        playerState.value = PlayerState.Default(getCurrentPosition(), trackIsLicked)
+        playerState.postValue(PlayerState.Default(getCurrentPosition(), trackIsLicked))
     }
 
     companion object {
