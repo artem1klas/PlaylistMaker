@@ -7,7 +7,7 @@
     android:background="@color/color_background"
     android:orientation="vertical"
     android:statusBarColor="@color/color_background"
-    tools:context="com.example.playlistmaker.search.ui.SearchFragment">
+    tools:context="com.example.playlistmaker.ui.search.SearchFragment">
 
 
     <TextView
@@ -33,7 +33,7 @@
             android:background="@drawable/rounded_edittext"
             android:drawableStart="@drawable/icon_search"
             android:drawablePadding="8dp"
-            android:fontFamily="@font/ys_text_medium"
+            android:fontFamily="@font/ys_text_regular"
             android:hint="@string/search"
             android:imeOptions="actionDone"
             android:inputType="text"
@@ -56,7 +56,7 @@
             app:backgroundTint="@color/ligth_gray"
             app:icon="@drawable/icon_clear"
             app:iconSize="@dimen/icon_size"
-            app:iconTint="@color/black" />
+            app:iconTint="@color/color_search_textColorHint" />
 
     </FrameLayout>
 

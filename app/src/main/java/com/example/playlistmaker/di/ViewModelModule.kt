@@ -1,10 +1,11 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.media.FavoriteTracksViewModel
-import com.example.playlistmaker.media.PlaylistsViewModel
-import com.example.playlistmaker.player.ui.PlayerViewModel
-import com.example.playlistmaker.search.ui.SearchViewModel
-import com.example.playlistmaker.settings.ui.SettingsViewModel
+import com.example.playlistmaker.ui.media.favoritetracks.FavoriteTracksViewModel
+import com.example.playlistmaker.ui.media.playlist.PlaylistsViewModel
+import com.example.playlistmaker.ui.player.PlayerViewModel
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.search.SearchViewModel
+import com.example.playlistmaker.ui.settings.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -14,8 +15,8 @@ val viewModelModule = module {
         SearchViewModel(get(), get())
     }
 
-    viewModel {(url: String) ->
-        PlayerViewModel(url, get())
+    viewModel {(track: Track) ->
+        PlayerViewModel(track, get(), get())
     }
 
     viewModel {
@@ -23,7 +24,7 @@ val viewModelModule = module {
     }
 
     viewModel{
-        FavoriteTracksViewModel()
+        FavoriteTracksViewModel(get())
     }
 
     viewModel{

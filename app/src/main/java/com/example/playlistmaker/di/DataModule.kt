@@ -1,9 +1,11 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
-import com.example.playlistmaker.search.data.network.ITunesApiService
-import com.example.playlistmaker.search.data.network.NetworkClient
-import com.example.playlistmaker.search.data.network.RetrofitNetworkClient
+import androidx.room.Room
+import com.example.playlistmaker.data.db.AppDatabase
+import com.example.playlistmaker.data.network.ITunesApiService
+import com.example.playlistmaker.data.network.NetworkClient
+import com.example.playlistmaker.data.network.RetrofitNetworkClient
 import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -36,6 +38,11 @@ val dataModule = module {
             PLAYLISTMAKER_SHARED_PREFENCES,
             Context.MODE_PRIVATE
         )
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
 
 }
