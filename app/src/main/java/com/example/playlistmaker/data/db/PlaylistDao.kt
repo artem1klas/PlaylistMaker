@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface PlaylistDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addPlaylist(playlist: PlaylisEntity)
+    suspend fun addPlaylist(playlist: PlaylistEntity)
 
 //    @Delete
 //    suspend fun removeTrack(track: TrackEntity)

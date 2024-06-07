@@ -10,14 +10,15 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.text.set
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
-import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -50,7 +51,24 @@ class NewPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.arrowBack.setOnClickListener {
-            findNavController().navigateUp()
+            if (uri == null
+                && binding.namePlaylist.text.toString().isNullOrEmpty()
+                && binding.descriptionPlaylist.text.toString().isNullOrEmpty()
+            ) {
+                findNavController().navigateUp()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Завершить создание плейлиста?")
+                    .setNeutralButton("Отмена"){ _, _ ->
+                    }
+                    .setPositiveButton("Завершить"){ _, _ ->
+                        findNavController().navigateUp()
+                    }
+                    .show()
+
+            }
+
+
         }
 
         binding.createPlaylist.isEnabled = false
@@ -61,6 +79,10 @@ class NewPlaylistFragment : Fragment() {
                 if (uri != null) {
                     this.uri = uri
                     binding.newPlayListImage.setImageURI(uri)
+                    binding.newPlayListImage.scaleType =ImageView.ScaleType.CENTER_CROP
+
+                    val layerDrawable = binding.newPlayListImage.background
+                //    val drawable = layerDrawable.find(R.drawable.new_plailist_image) as GradientDrawable
                     //       saveImageToPrivateStorage(uri)
                 }
             }
@@ -72,16 +94,17 @@ class NewPlaylistFragment : Fragment() {
         binding.namePlaylist.addTextChangedListener(textWatcher)
 
         binding.createPlaylist.setOnClickListener {
-            try{
-                viewModel.createNewPlaylist(
-                    binding.namePlaylist.text.toString(),
-                    binding.descriptionPlaylist.text.toString(),
-                    uri
-                )
-            }catch (e: InvocationTargetException){
-                Toast.makeText(context, e.cause.toString(), Toast.LENGTH_LONG).show()
-            }
-            Toast.makeText(context, "Плейлист ${binding.namePlaylist.text.toString()} создан", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                "Плейлист ${binding.namePlaylist.text} создан",
+                Toast.LENGTH_LONG
+            ).show()
+            viewModel.createNewPlaylist(
+                binding.namePlaylist.text.toString(),
+                binding.descriptionPlaylist.text.toString(),
+                uri.toString()
+            )
+            findNavController().navigateUp()
         }
 
 
