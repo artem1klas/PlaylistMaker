@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.media.playlist
+package com.example.playlistmaker.ui.media.new_playlist
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,13 +16,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.reflect.InvocationTargetException
 
 class NewPlaylistFragment : Fragment() {
 //    companion object {

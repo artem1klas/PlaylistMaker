@@ -1,9 +1,8 @@
-package com.example.playlistmaker.ui.media.playlist
+package com.example.playlistmaker.ui.media.new_playlist
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api_impl.media.NewPlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import kotlinx.coroutines.launch
 

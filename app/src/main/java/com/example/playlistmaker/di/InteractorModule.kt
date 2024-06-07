@@ -1,9 +1,9 @@
 package com.example.playlistmaker.di
 
-import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackInteractor
-import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackInteractorImpl
-import com.example.playlistmaker.domain.api_impl.media.NewPlaylistInteractor
-import com.example.playlistmaker.domain.api_impl.media.NewPlaylistInteractorImpl
+import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackInteractor
+import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackInteractorImpl
+import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractorImpl
 import com.example.playlistmaker.domain.api_impl.player.PlayerInteractor
 import com.example.playlistmaker.domain.api_impl.player.PlayerInteractorImpl
 import com.example.playlistmaker.domain.api_impl.search.HistoryInteractor

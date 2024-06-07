@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.converters
 
-import com.example.playlistmaker.data.db.PlaylistEntity
+import com.example.playlistmaker.data.db.playlists.PlaylistEntity
 import com.example.playlistmaker.domain.models.Playlist
 
 class PlaylistDbConvertor {
