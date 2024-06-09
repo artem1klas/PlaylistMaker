@@ -1,5 +1,7 @@
 package com.example.playlistmaker.ui.media.playlists
 
+import android.content.Context
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -15,6 +17,17 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) : RecyclerV
     fun bind(playlist: Playlist) {
         binding.playlistName.text = playlist.namePlaylist
         binding.playlistSize.text = playlist.size.toString()
+        if(playlist.uri == null) {
+            binding.playlistImage.setImageResource(R.drawable.image_placeholdertrack)
+        } else {
+ //           itemView.context.getExternalFilesDir()
+
+
+
+        //
+        //
+        //      val uri = Uri(playlist.uri)
+        }
 
 
 //        Glide.with(itemView)

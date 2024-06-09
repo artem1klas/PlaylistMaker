@@ -11,7 +11,7 @@ interface PlaylistDao {
     suspend fun addPlaylist(playlist: PlaylistEntity)
 
 
-    @Query("SELECT * FROM track_table")
+    @Query("SELECT * FROM playlist_table")
     suspend fun getPlaylists(): List<PlaylistEntity>
 
 //    @Query("SELECT namePlaylist FROM playlist_table")

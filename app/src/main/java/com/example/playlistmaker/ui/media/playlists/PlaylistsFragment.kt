@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment: Fragment() {
 
-    private val playlistsViewModel by viewModel<PlaylistsViewModel>()
+    private val viewModel by viewModel<PlaylistsViewModel>()
 
     private  var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
@@ -57,7 +57,7 @@ class PlaylistsFragment: Fragment() {
 
 
         binding.playlistsList.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.adapter = adapter
+        binding.playlistsList.adapter = adapter
 
         viewModel.fillData()
 
@@ -68,6 +68,32 @@ class PlaylistsFragment: Fragment() {
 
 
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun render(state: PlaylistsState) {
+        when (state) {
+            is PlaylistsState.Empty -> {
+                binding.empty.isVisible = true
+                binding.playlistsList.isVisible = false
+                binding.windowProgressBar.isVisible = false
+            }
+
+            is PlaylistsState.Content -> {
+                playlists.clear()
+                playlists.addAll(state.playlists.reversed())
+                binding.empty.isVisible = false
+                binding.playlistsList.isVisible = true
+                binding.windowProgressBar.isVisible = false
+            }
+
+            is PlaylistsState.Loading -> {
+                binding.empty.isVisible = false
+                binding.playlistsList.isVisible = false
+                binding.windowProgressBar.isVisible = true
+            }
+        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun onDestroyView() {
@@ -84,31 +110,7 @@ class PlaylistsFragment: Fragment() {
 
 
 
-@SuppressLint("NotifyDataSetChanged")
-fun render(state: FavoriteState) {
-    when (state) {
-        is FavoriteState.Empty -> {
-            binding.empty.isVisible = true
-            binding.windowTrackList.isVisible = false
-            binding.windowProgressBar.isVisible = false
-        }
 
-        is FavoriteState.Content -> {
-            tracks.clear()
-            tracks.addAll(state.tracks.reversed())
-            binding.empty.isVisible = false
-            binding.windowTrackList.isVisible = true
-            binding.windowProgressBar.isVisible = false
-        }
-
-        is FavoriteState.Loading -> {
-            binding.empty.isVisible = false
-            binding.windowTrackList.isVisible = false
-            binding.windowProgressBar.isVisible = true
-        }
-    }
-    adapter.notifyDataSetChanged()
-}
 
 
 

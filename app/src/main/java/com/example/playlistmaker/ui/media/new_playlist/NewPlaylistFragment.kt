@@ -102,6 +102,9 @@ class NewPlaylistFragment : Fragment() {
                 binding.descriptionPlaylist.text.toString(),
                 uri.toString()
             )
+            if (uri != null) {
+                saveImageToPrivateStorage(binding.namePlaylist.text.toString(), uri!!)
+            }
             findNavController().navigateUp()
         }
 
