@@ -17,25 +17,13 @@ class PlaylistViewHolder(private val binding: PlaylistLayoutBinding) : RecyclerV
     fun bind(playlist: Playlist) {
         binding.playlistName.text = playlist.namePlaylist
         binding.playlistSize.text = playlist.size.toString()
-        if(playlist.uri == null) {
-            binding.playlistImage.setImageResource(R.drawable.image_placeholdertrack)
-        } else {
- //           itemView.context.getExternalFilesDir()
 
-
-
-        //
-        //
-        //      val uri = Uri(playlist.uri)
-        }
-
-
-//        Glide.with(itemView)
-//            .load(track.artworkUrl100)
-//            .placeholder(R.drawable.image_placeholdertrack)
-//            .fitCenter()
-//            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
-//            .into(binding.trackImage)
+        Glide.with(itemView)
+            .load(playlist.uri)
+            .placeholder(R.drawable.image_placeholdertrack)
+            .fitCenter()
+            .transform(RoundedCorners(dpToPx(2f, itemView.context)))
+            .into(binding.playlistImage)
 
     }
 }

@@ -13,6 +13,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.utils.dpToPx
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -72,10 +73,6 @@ class PlayerFragment : Fragment() {
             }
         }
 
-        binding.addButton.setOnClickListener {
-            binding.addButton.setImageResource(R.drawable.player_add_clicked)
-        }
-
         binding.likeButton.setOnClickListener {
             viewModel.likeButtonClicked()
         }
@@ -87,6 +84,36 @@ class PlayerFragment : Fragment() {
         binding.playButton.setOnClickListener {
             viewModel.playButtonClicked()
         }
+
+
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+        })
+
+        binding.addButton.setOnClickListener {
+            binding.addButton.setImageResource(R.drawable.player_add_clicked)
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+
+
 
     }
 
