@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.track.TrackAdapter
 import com.example.playlistmaker.utils.dpToPx
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
@@ -28,6 +31,9 @@ class PlayerFragment : Fragment() {
     private val viewModel: PlayerViewModel by viewModel {
         parametersOf(track)
     }
+
+    private val playlists = ArrayList<Playlist>()
+    private val adapter = PlaylistBottomsheetAdapter(playlists)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +56,9 @@ class PlayerFragment : Fragment() {
         binding.yearValue.text = track.releaseDate
         binding.genreValue.text = track.primaryGenreName
         binding.countryValue.text = track.country
+
+        binding.windowPlaylists.layoutManager = LinearLayoutManager(requireContext())
+        binding.windowPlaylists.adapter = adapter
 
         Glide.with(binding.root)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -109,6 +118,7 @@ class PlayerFragment : Fragment() {
 
         binding.addButton.setOnClickListener {
             binding.addButton.setImageResource(R.drawable.player_add_clicked)
+            playlists =
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 

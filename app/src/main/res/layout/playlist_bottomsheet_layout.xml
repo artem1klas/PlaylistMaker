@@ -10,7 +10,7 @@
     android:paddingEnd="12dp">
 
     <ImageView
-        android:id="@+id/trackImage"
+        android:id="@+id/playlistImage"
         android:layout_width="@dimen/track_image"
         android:layout_height="@dimen/track_image"
         android:layout_margin="@dimen/element_border_8"
