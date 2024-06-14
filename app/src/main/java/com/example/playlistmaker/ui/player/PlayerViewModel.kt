@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
 import com.example.playlistmaker.domain.api_impl.player.PlayerInteractor
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,7 +18,8 @@ import java.util.Locale
 class PlayerViewModel(
     private val track: Track,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val newPlaylistInteractor: NewPlaylistInteractor
 ) : ViewModel() {
 
     private val dateFormat by lazy {
@@ -93,6 +96,16 @@ class PlayerViewModel(
             isLiked = !trackIsLicked
         })
         trackIsLicked = !trackIsLicked
+    }
+
+    fun addButtonClicked(): List<Playlist>{
+        var playlist = mutableListOf<Playlist>()
+        viewModelScope.launch {
+            newPlaylistInteractor.getPlaylists().collect{
+                playlist = it.toMutableList()
+            }
+        }
+        return playlist
     }
 
     fun startPlayer() {

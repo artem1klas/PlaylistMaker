@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.player
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,7 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -117,8 +119,11 @@ class PlayerFragment : Fragment() {
         })
 
         binding.addButton.setOnClickListener {
+            playlists.clear()
+            playlists.addAll(viewModel.addButtonClicked())
             binding.addButton.setImageResource(R.drawable.player_add_clicked)
-            playlists =
+            adapter.notifyDataSetChanged()
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
