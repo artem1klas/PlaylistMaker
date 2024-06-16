@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -59,8 +60,8 @@ class PlayerFragment : Fragment() {
         binding.genreValue.text = track.primaryGenreName
         binding.countryValue.text = track.country
 
-        binding.windowPlaylists.layoutManager = LinearLayoutManager(requireContext())
-        binding.windowPlaylists.adapter = adapter
+        binding.windowPlaylistsBottomSheet.layoutManager = LinearLayoutManager(requireContext())
+        binding.windowPlaylistsBottomSheet.adapter = adapter
 
         Glide.with(binding.root)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
@@ -70,6 +71,11 @@ class PlayerFragment : Fragment() {
             .into(binding.imageTrack)
 
         viewModel.observeState().observe(viewLifecycleOwner) {
+            if (it is PlayerState.ButtomSheet){
+                playlists.clear()
+                playlists.addAll(it.playlists)
+                adapter.notifyDataSetChanged()
+            }
             binding.playButton.isEnabled = it.isPlayButtonEnabled
             binding.currentTrackTime.text = it.progress
             if (it.isButtonPlay) {
@@ -96,6 +102,10 @@ class PlayerFragment : Fragment() {
             viewModel.playButtonClicked()
         }
 
+        binding.createPlaylistBottomSheet.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+        }
+
 
 
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet).apply {
@@ -119,11 +129,8 @@ class PlayerFragment : Fragment() {
         })
 
         binding.addButton.setOnClickListener {
-            playlists.clear()
-            playlists.addAll(viewModel.addButtonClicked())
-            binding.addButton.setImageResource(R.drawable.player_add_clicked)
+            viewModel.addButtonClicked()
             adapter.notifyDataSetChanged()
-
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
