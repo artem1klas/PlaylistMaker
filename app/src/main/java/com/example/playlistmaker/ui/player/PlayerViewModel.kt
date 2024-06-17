@@ -35,7 +35,13 @@ class PlayerViewModel(
     private var timerJob: Job? = null
 
     private val playerState =
-        MutableLiveData<PlayerState>(PlayerState.Default(getCurrentPosition(), trackIsLicked, trackIsAdded))
+        MutableLiveData<PlayerState>(
+            PlayerState.Default(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
 
     fun observeState(): LiveData<PlayerState> = playerState
 
@@ -59,7 +65,13 @@ class PlayerViewModel(
         playerInteractor.prepareAsync()
 
         playerInteractor.setOnPreparedListener {
-            playerState.postValue(PlayerState.Prepared(getCurrentPosition(), trackIsLicked, trackIsAdded))
+            playerState.postValue(
+                PlayerState.Prepared(
+                    getCurrentPosition(),
+                    trackIsLicked,
+                    trackIsAdded
+                )
+            )
         }
         playerInteractor.setOnCompletionListener {
             timerJob?.cancel()
@@ -102,24 +114,40 @@ class PlayerViewModel(
         trackIsLicked = !trackIsLicked
     }
 
-    fun addButtonClicked(){
+    fun addButtonClicked() {
         viewModelScope.launch {
-            newPlaylistInteractor.getPlaylists().collect{
+            newPlaylistInteractor.getPlaylists().collect {
                 processResult(it)
             }
         }
     }
 
     private fun processResult(playlists: List<Playlist>) {
-        playerState.postValue(playerState.value.also {
-            it?.playlists = playlists
-        })
+        playerState.postValue(
+//            ((playerState.value as PlayerState.ButtomSheet).also {
+//                it.playlists = playlists
+//            }
+            PlayerState.ButtomSheet(
+                isPlayButtonEnabled = playerState.value!!.isPlayButtonEnabled,
+                isButtonPlay = playerState.value!!.isPlayButtonEnabled,
+                progress = playerState.value!!.progress,
+                isLiked = playerState.value!!.isLiked,
+                isAdded = playerState.value!!.isAdded,
+                playlists = playlists
+            )
+        )
 
     }
 
     fun startPlayer() {
         playerInteractor.start()
-        playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked, trackIsAdded))
+        playerState.postValue(
+            PlayerState.Playing(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
         startTimer()
     }
 
@@ -128,7 +156,13 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (playerInteractor.isPlaying()) {
                 delay(DELAY_MILLIS)
-                playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked, trackIsAdded))
+                playerState.postValue(
+                    PlayerState.Playing(
+                        getCurrentPosition(),
+                        trackIsLicked,
+                        trackIsAdded
+                    )
+                )
             }
         }
     }
@@ -146,7 +180,13 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        playerState.postValue(PlayerState.Default(getCurrentPosition(), trackIsLicked, trackIsAdded))
+        playerState.postValue(
+            PlayerState.Default(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
     }
 
     companion object {

@@ -16,7 +16,11 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
+import com.example.playlistmaker.utils.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -78,6 +82,15 @@ class NewPlaylistFragment : Fragment() {
                     this.uri = uri
                     binding.newPlayListImage.setImageURI(uri)
                     binding.newPlayListImage.scaleType =ImageView.ScaleType.CENTER_CROP
+
+
+//                    Glide.with(requireContext())
+//                        .load(uri)
+//                        .placeholder(R.drawable.image_placeholdertrack)
+//                        .fitCenter()
+//                        .transform(RoundedCorners(dpToPx(8f, requireContext())))
+//                        .into(binding.newPlayListImage)
+
 
                     val layerDrawable = binding.newPlayListImage.background
                 //    val drawable = layerDrawable.find(R.drawable.new_plailist_image) as GradientDrawable

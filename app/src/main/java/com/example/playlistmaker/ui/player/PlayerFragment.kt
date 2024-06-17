@@ -70,10 +70,31 @@ class PlayerFragment : Fragment() {
             .transform(RoundedCorners(dpToPx(8f, requireContext())))
             .into(binding.imageTrack)
 
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when(newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.visibility = View.GONE
+                    }
+                    else -> {
+                        binding.overlay.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+
+        })
+
         viewModel.observeState().observe(viewLifecycleOwner) {
             if (it is PlayerState.ButtomSheet){
                 playlists.clear()
                 playlists.addAll(it.playlists)
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 adapter.notifyDataSetChanged()
             }
             binding.playButton.isEnabled = it.isPlayButtonEnabled
@@ -106,36 +127,9 @@ class PlayerFragment : Fragment() {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
 
-
-
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.playlistBottomSheet).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when(newState) {
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
-                    }
-                    else -> {
-                        binding.overlay.visibility = View.VISIBLE
-                    }
-                }
-            }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-
-        })
-
         binding.addButton.setOnClickListener {
             viewModel.addButtonClicked()
-            adapter.notifyDataSetChanged()
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-
-
-
 
     }
 
