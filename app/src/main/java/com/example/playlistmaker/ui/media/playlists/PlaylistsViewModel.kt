@@ -1,5 +1,6 @@
 package com.example.playlistmaker.ui.media.playlists
 
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,5 +39,21 @@ class PlaylistsViewModel(val newPlaylistInteractor: NewPlaylistInteractor): View
     private fun renderState(state: PlaylistsState) {
         stateLiveData.postValue(state)
     }
+
+    fun addTrackToPlaylist(track: Track, playlist: Playlist){
+        viewModelScope.launch {
+            if (trackAdded()) {
+
+            } else {
+                newPlaylistInteractor.addTrackToPlaylist(track, playlist)
+            }
+        }
+    }
+
+    private fun trackAdded(): Boolean {
+        return false
+    }
+
+
 
 }

@@ -8,6 +8,7 @@ import com.example.playlistmaker.databinding.PlaylistLayoutBinding
 import com.example.playlistmaker.databinding.TrackLayoutBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.track.TrackAdapter
 import com.example.playlistmaker.ui.track.TrackViewHolder
 
 
@@ -21,5 +22,9 @@ class PlaylistAdapter(val playlists: ArrayList<Playlist>) : RecyclerView.Adapter
         holder.bind(playlists[position])
     }
     override fun getItemCount() = playlists.size
+
+
+
+
 
 }

@@ -32,6 +32,8 @@ class PlayerViewModel(
 
     private var trackIsAdded = false
 
+    private var trackIds = mutableListOf<String>()
+
     private var timerJob: Job? = null
 
     private val playerState =
@@ -122,11 +124,25 @@ class PlayerViewModel(
         }
     }
 
+    fun addTrackToPlaylist(playlist: Playlist): Boolean {
+        if (true) {
+            viewModelScope.launch {
+                newPlaylistInteractor.addTrackToPlaylist(track, playlist.also {
+                    trackIds.add(track.trackId)
+                    it.size += 1
+                })
+            }
+            return true
+        } else {
+            return false
+        }
+
+
+
+    }
+
     private fun processResult(playlists: List<Playlist>) {
         playerState.postValue(
-//            ((playerState.value as PlayerState.ButtomSheet).also {
-//                it.playlists = playlists
-//            }
             PlayerState.ButtomSheet(
                 isPlayButtonEnabled = playerState.value!!.isPlayButtonEnabled,
                 isButtonPlay = playerState.value!!.isPlayButtonEnabled,
@@ -136,6 +152,10 @@ class PlayerViewModel(
                 playlists = playlists
             )
         )
+
+//        trackIds = playlists.map {
+//
+//        }
 
     }
 

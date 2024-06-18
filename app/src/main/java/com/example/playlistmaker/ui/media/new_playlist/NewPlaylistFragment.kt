@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
@@ -80,21 +81,10 @@ class NewPlaylistFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     this.uri = uri
-                    binding.newPlayListImage.setImageURI(uri)
-                    binding.newPlayListImage.scaleType =ImageView.ScaleType.CENTER_CROP
-
-
-//                    Glide.with(requireContext())
-//                        .load(uri)
-//                        .placeholder(R.drawable.image_placeholdertrack)
-//                        .fitCenter()
-//                        .transform(RoundedCorners(dpToPx(8f, requireContext())))
-//                        .into(binding.newPlayListImage)
-
-
-                    val layerDrawable = binding.newPlayListImage.background
-                //    val drawable = layerDrawable.find(R.drawable.new_plailist_image) as GradientDrawable
-                    //       saveImageToPrivateStorage(uri)
+                    Glide.with(requireContext())
+                        .load(uri)
+                        .transform(CenterCrop(), RoundedCorners(dpToPx(8f, requireContext())))
+                        .into(binding.newPlayListImage)
                 }
             }
 
@@ -120,14 +110,10 @@ class NewPlaylistFragment : Fragment() {
             }
             findNavController().navigateUp()
         }
-
-
     }
 
     private val textWatcher = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-        }
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (!p0.isNullOrEmpty()) {
@@ -137,9 +123,7 @@ class NewPlaylistFragment : Fragment() {
             }
         }
 
-        override fun afterTextChanged(p0: Editable?) {
-
-        }
+        override fun afterTextChanged(p0: Editable?) {}
 
     }
 

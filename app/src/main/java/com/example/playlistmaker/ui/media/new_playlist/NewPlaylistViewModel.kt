@@ -16,6 +16,7 @@ class NewPlaylistViewModel(private val playlistInteractor: NewPlaylistInteractor
                 namePlaylist = namePlaylist,
                 descriptionPlaylist = descriptionPlaylist,
                 uri = uri,
+                trackIds = mutableListOf<String>(),
                 size = 0
             ))
         }

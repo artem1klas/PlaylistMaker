@@ -11,6 +11,6 @@ import androidx.room.PrimaryKey
         val namePlaylist: String,
         val descriptionPlaylist: String,
         val uri: String,
- //       val tracks: List<String>,
-        val size: Int
+        val trackIds: String,
+        var size: Int
     )
