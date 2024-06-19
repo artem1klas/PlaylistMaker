@@ -4,12 +4,14 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+
     <Button
         android:id="@+id/createNewPlaylist"
         style="@style/problem_update_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/media_top_button"
+        android:layout_marginBottom="12dp"
         android:text="@string/new_playlist" />
 
     <LinearLayout
@@ -22,26 +24,24 @@
             style="@style/window_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/media_button_image"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/media_button_image" />
 
         <TextView
             style="@style/problem_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/media_image_text"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/media_image_text"
             android:text="@string/you_didnt_create_playlist" />
-
     </LinearLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/playlistsList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/history_text_recycler"
-            android:layout_weight="1" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistsList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <ProgressBar
         android:id="@+id/windowProgressBar"

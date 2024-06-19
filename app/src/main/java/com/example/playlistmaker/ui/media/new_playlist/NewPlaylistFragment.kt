@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -28,9 +29,6 @@ import java.io.File
 import java.io.FileOutputStream
 
 class NewPlaylistFragment : Fragment() {
-//    companion object {
-//        fun newInstance() = NewPlaylistFragment()
-//    }
 
     private val viewModel by viewModel<NewPlaylistViewModel>()
 
@@ -74,7 +72,7 @@ class NewPlaylistFragment : Fragment() {
 
         }
 
-        binding.createPlaylist.isEnabled = false
+       // binding.createPlaylist.isEnabled = false
 
 
         val pickMedia =
@@ -117,8 +115,10 @@ class NewPlaylistFragment : Fragment() {
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (!p0.isNullOrEmpty()) {
+                binding.createPlaylist.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
                 binding.createPlaylist.isEnabled = true
             } else {
+                binding.createPlaylist.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
                 binding.createPlaylist.isEnabled = false
             }
         }
