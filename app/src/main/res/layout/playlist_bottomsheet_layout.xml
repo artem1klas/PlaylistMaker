@@ -10,9 +10,9 @@
     android:paddingEnd="12dp">
 
     <ImageView
-        android:id="@+id/playlistImage"
-        android:layout_width="@dimen/track_image"
-        android:layout_height="@dimen/track_image"
+        android:id="@+id/playlistButtomsheetImage"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
         android:layout_margin="@dimen/element_border_8"
         android:background="@color/color_background"
         android:src="@drawable/image_placeholdertrack" />
@@ -44,8 +44,8 @@
             android:ellipsize="end"
             android:fontFamily="@font/ys_text_regular"
             android:maxLines="1"
-            android:textColor="@color/color_text"
-            android:textSize="16sp"
+            android:textColor="@color/text_gray"
+            android:textSize="11sp"
             tools:text="trackName" />
 
 

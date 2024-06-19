@@ -270,13 +270,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Добавить в плейлист" />
+            android:text="@string/player_title_add_to_playlist"
+            android:textColor="@color/color_text"
+            android:ellipsize="end"
+            android:fontFamily="@font/ys_text_regular"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"/>
 
         <Button
             android:id="@+id/createPlaylistBottomSheet"
+            style="@style/problem_update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Новый плейлист" />
+            android:text="@string/playlist_button_add"
+            android:layout_marginTop="21dp"
+            android:layout_marginBottom="24dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/windowPlaylistsBottomSheet"
