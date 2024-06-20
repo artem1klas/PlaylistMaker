@@ -5,6 +5,6 @@ data class Playlist(
     val namePlaylist: String,
     val descriptionPlaylist: String,
     val uri: String,
-    val trackIds: List<String>,
+    val trackIds: MutableList<String>,
     var size: Int
 )

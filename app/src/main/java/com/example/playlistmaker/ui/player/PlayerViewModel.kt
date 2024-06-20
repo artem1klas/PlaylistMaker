@@ -127,10 +127,7 @@ class PlayerViewModel(
     fun addTrackToPlaylist(playlist: Playlist): Boolean {
         if (true) {
             viewModelScope.launch {
-                newPlaylistInteractor.addTrackToPlaylist(track, playlist.also {
-                    trackIds.add(track.trackId)
-                    it.size += 1
-                })
+                newPlaylistInteractor.addTrackToPlaylist(track, playlist)
             }
             return true
         } else {

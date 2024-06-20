@@ -2,7 +2,7 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.playlistmaker.data.db.tracks.AppDatabase
+import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.network.ITunesApiService
 import com.example.playlistmaker.data.network.NetworkClient
 import com.example.playlistmaker.data.network.RetrofitNetworkClient
