@@ -6,26 +6,32 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class PlaylistDbConvertor {
-    val gson = Gson()
     fun map(playlist: Playlist): PlaylistEntity {
+        var ids = ""
+        if (playlist.trackIds.isNotEmpty()){
+            ids = playlist.trackIds.joinToString(",")
+        }
         return PlaylistEntity(
             id = playlist.id,
             namePlaylist = playlist.namePlaylist,
             descriptionPlaylist = playlist.descriptionPlaylist,
             uri = playlist.uri,
-            trackIds = playlist.trackIds.joinToString(","),
+            ids,
             size = playlist.size
         )
     }
 
     fun map(playlist: PlaylistEntity): Playlist {
-
+        val ids = mutableListOf<String>()
+        if (playlist.trackIds.isNotEmpty()){
+            ids.addAll(playlist.trackIds.split(",").toMutableList())
+        }
         return Playlist(
             playlist.id,
             playlist.namePlaylist,
             playlist.descriptionPlaylist,
             playlist.uri,
-            playlist.trackIds.split(",").toMutableList(),
+            ids,
             playlist.size
         )
     }

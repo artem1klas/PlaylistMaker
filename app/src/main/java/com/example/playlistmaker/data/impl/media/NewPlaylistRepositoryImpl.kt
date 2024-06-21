@@ -25,12 +25,9 @@ class NewPlaylistRepositoryImpl(
     }
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
-//        val _playlist = playlist
-
-//        _playlist.trackIds.add(track.trackId)
         playlist.trackIds.add(track.trackId)
+        playlist.size += 1
         playlistDatabase.playlistDao().addPlaylist(playlistDbConvertor.map(playlist))
-
         playlistDatabase.playlistDao().addTrackToPlaylist(trackInPlaylistDbConvertor.map(track))
     }
 
@@ -39,5 +36,4 @@ class NewPlaylistRepositoryImpl(
                 playlist -> playlistDbConvertor.map(playlist)
         }
     }
-
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -19,24 +20,23 @@ import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.ui.media.favoritetracks.FavoriteState
 import com.example.playlistmaker.ui.media.favoritetracks.FavoriteTracksFragment
 import com.example.playlistmaker.ui.media.favoritetracks.FavoriteTracksViewModel
+import com.example.playlistmaker.ui.media.new_playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.ui.track.TrackAdapter
 import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlaylistsFragment: Fragment() {
-
+class PlaylistsFragment : Fragment() {
 
 
     private val viewModel by viewModel<PlaylistsViewModel>()
 
-    private  var _binding: FragmentPlaylistsBinding? = null
+    private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
     private val playlists = ArrayList<Playlist>()
     private val adapter = PlaylistAdapter(playlists)
-
 
 
     override fun onCreateView(
@@ -48,10 +48,17 @@ class PlaylistsFragment: Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.createNewPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_mediaFragment_to_newPlaylistFragment)
+            findNavController().navigate(R.id.action_mediaFragment_to_newPlaylistFragment,
+                    NewPlaylistFragment.createArgs("-1")
+                )
+//            NewPlaylistFragment.createArgs(trackId = Gson().toJson(Track(
+//            "r", "r", "r", "r", "r", "r", "r", "r", "r", "r", true)))
+
+
         }
 
 
@@ -66,8 +73,6 @@ class PlaylistsFragment: Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-
 
 
     }

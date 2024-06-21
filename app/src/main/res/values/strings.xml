@@ -34,4 +34,7 @@
     <string name="new_laylist_create">Создать</string>
     <string name="player_title_add_to_playlist">Добавить в плейлист</string>
     <string name="playlist_button_add">Новый плейлист</string>
+    <string name="finish_creating_a_playlist">Завершить создание плейлиста?</string>
+    <string name="cancel">Отмена</string>
+    <string name="complete">Завершить</string>
 </resources>

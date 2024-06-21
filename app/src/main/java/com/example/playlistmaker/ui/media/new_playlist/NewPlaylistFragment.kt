@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -22,8 +23,11 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentNewPlaylistBinding
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.utils.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -38,6 +42,8 @@ class NewPlaylistFragment : Fragment() {
 
     private var uri: Uri? = null
 
+    private var track: Track? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +57,8 @@ class NewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        track = getTrack(requireArguments().getString(SELECTED_TRACK))
+
         binding.arrowBack.setOnClickListener {
             if (uri == null
                 && binding.namePlaylist.text.toString().isNullOrEmpty()
@@ -59,10 +67,10 @@ class NewPlaylistFragment : Fragment() {
                 findNavController().navigateUp()
             } else {
                 MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Завершить создание плейлиста?")
-                    .setNeutralButton("Отмена"){ _, _ ->
+                    .setTitle(getString(R.string.finish_creating_a_playlist))
+                    .setNeutralButton(getString(R.string.cancel)){ _, _ ->
                     }
-                    .setPositiveButton("Завершить"){ _, _ ->
+                    .setPositiveButton(getString(R.string.complete)){ _, _ ->
                         findNavController().navigateUp()
                     }
                     .show()
@@ -71,8 +79,6 @@ class NewPlaylistFragment : Fragment() {
 
 
         }
-
-       // binding.createPlaylist.isEnabled = false
 
 
         val pickMedia =
@@ -98,10 +104,13 @@ class NewPlaylistFragment : Fragment() {
                 "Плейлист ${binding.namePlaylist.text} создан",
                 Toast.LENGTH_LONG
             ).show()
+            val trackIds = if (track != null) mutableListOf(track!!.trackId) else mutableListOf()
+
             viewModel.createNewPlaylist(
                 binding.namePlaylist.text.toString(),
                 binding.descriptionPlaylist.text.toString(),
-                uri.toString()
+                uri.toString(),
+                trackIds
             )
             if (uri != null) {
                 saveImageToPrivateStorage(binding.namePlaylist.text.toString(), uri!!)
@@ -148,8 +157,16 @@ class NewPlaylistFragment : Fragment() {
 
     }
 
+    private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val SELECTED_TRACK = "selected_track"
+        fun createArgs(trackId: String): Bundle = bundleOf(PlayerFragment.SELECTED_TRACK to trackId)
+
     }
 }

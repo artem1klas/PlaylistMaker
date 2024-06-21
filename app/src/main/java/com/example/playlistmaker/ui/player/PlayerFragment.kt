@@ -17,6 +17,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlayerBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.media.new_playlist.NewPlaylistFragment
 import com.example.playlistmaker.ui.search.SearchFragment
 import com.example.playlistmaker.ui.track.TrackAdapter
 import com.example.playlistmaker.utils.debounce
@@ -134,7 +135,10 @@ class PlayerFragment : Fragment() {
         }
 
         binding.createPlaylistBottomSheet.setOnClickListener {
-            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+            findNavController().navigate(
+                R.id.action_playerFragment_to_newPlaylistFragment,
+                NewPlaylistFragment.createArgs(trackId = Gson().toJson(track))
+            )
         }
 
         binding.addButton.setOnClickListener {
@@ -142,10 +146,18 @@ class PlayerFragment : Fragment() {
         }
 
         onPlaylistClick = { playlist ->
-            if(viewModel.addTrackToPlaylist(playlist)){
-                Toast.makeText(context, "Добавлено в плейлист ${playlist.namePlaylist}", Toast.LENGTH_LONG).show()
+            if (viewModel.addTrackToPlaylist(playlist)) {
+                Toast.makeText(
+                    context,
+                    "Добавлено в плейлист ${playlist.namePlaylist}",
+                    Toast.LENGTH_LONG
+                ).show()
             } else {
-                Toast.makeText(context, "Трек уже добавлен в плейлист ${playlist.namePlaylist}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Трек уже добавлен в плейлист ${playlist.namePlaylist}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             BottomSheetBehavior.from(binding.playlistBottomSheet).apply {
                 state = BottomSheetBehavior.STATE_HIDDEN

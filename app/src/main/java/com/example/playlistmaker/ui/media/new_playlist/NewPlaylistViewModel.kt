@@ -9,15 +9,15 @@ import kotlinx.coroutines.launch
 class NewPlaylistViewModel(private val playlistInteractor: NewPlaylistInteractor): ViewModel() {
 
 
-    fun createNewPlaylist(namePlaylist: String, descriptionPlaylist: String, uri: String) {
+    fun createNewPlaylist(namePlaylist: String, descriptionPlaylist: String, uri: String, trackIds: MutableList<String>) {
         viewModelScope.launch {
             playlistInteractor.createNewPlaylist(Playlist(
                 id = 0,
                 namePlaylist = namePlaylist,
                 descriptionPlaylist = descriptionPlaylist,
                 uri = uri,
-                trackIds = ArrayList<String>(),
-                size = 0
+                trackIds = trackIds,
+                size = trackIds.size
             ))
         }
 
