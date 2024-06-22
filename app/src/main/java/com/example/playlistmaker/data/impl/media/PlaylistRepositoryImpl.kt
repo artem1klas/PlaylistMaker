@@ -2,19 +2,19 @@ package com.example.playlistmaker.data.impl.media
 
 import com.example.playlistmaker.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.data.converters.TrackInPlaylistDbConvertor
-import com.example.playlistmaker.data.db.playlists.PlaylistEntity
-import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistRepository
+import com.example.playlistmaker.data.db.entities.PlaylistEntity
+import com.example.playlistmaker.data.db.database_dao.AppDatabase
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class NewPlaylistRepositoryImpl(
+class PlaylistRepositoryImpl(
     private val playlistDatabase: AppDatabase,
     private val playlistDbConvertor: PlaylistDbConvertor,
     private val trackInPlaylistDbConvertor: TrackInPlaylistDbConvertor
-): NewPlaylistRepository {
+): PlaylistRepository {
     override suspend fun createNewPlaylist(playlist: Playlist) {
         playlistDatabase.playlistDao().addPlaylist(playlistDbConvertor.map(playlist))
     }

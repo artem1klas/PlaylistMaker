@@ -6,12 +6,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackInteractor
-import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.api_impl.player.PlayerInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.models.TypeError
-import com.example.playlistmaker.ui.search.SearchState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,7 +19,7 @@ class PlayerViewModel(
     private val track: Track,
     private val playerInteractor: PlayerInteractor,
     private val favoriteTrackInteractor: FavoriteTrackInteractor,
-    private val newPlaylistInteractor: NewPlaylistInteractor
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val dateFormat by lazy {
@@ -31,8 +29,6 @@ class PlayerViewModel(
     private var trackIsLicked = false
 
     private var trackIsAdded = false
-
-    private var trackIds = mutableListOf<String>()
 
     private var timerJob: Job? = null
 
@@ -58,7 +54,6 @@ class PlayerViewModel(
                         trackIsLicked = true
                     }
                 }
-
         }
     }
 
@@ -118,16 +113,16 @@ class PlayerViewModel(
 
     fun addButtonClicked() {
         viewModelScope.launch {
-            newPlaylistInteractor.getPlaylists().collect {
+            playlistInteractor.getPlaylists().collect {
                 processResult(it)
             }
         }
     }
 
     fun addTrackToPlaylist(playlist: Playlist): Boolean {
-        if (true) {
+        if (track.trackId !in playlist.trackIds) {
             viewModelScope.launch {
-                newPlaylistInteractor.addTrackToPlaylist(track, playlist)
+                playlistInteractor.addTrackToPlaylist(track, playlist)
             }
             return true
         } else {

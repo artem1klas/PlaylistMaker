@@ -5,7 +5,7 @@ import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 
-interface NewPlaylistInteractor{
+interface PlaylistInteractor{
     suspend fun createNewPlaylist(playlist: Playlist)
 
     fun getPlaylists(): Flow<List<Playlist>>

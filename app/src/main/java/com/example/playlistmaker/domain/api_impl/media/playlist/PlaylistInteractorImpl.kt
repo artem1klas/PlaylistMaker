@@ -4,8 +4,8 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class NewPlaylistInteractorImpl(val playlistRepository: NewPlaylistRepository):
-    NewPlaylistInteractor {
+class PlaylistInteractorImpl(val playlistRepository: PlaylistRepository):
+    PlaylistInteractor {
     override suspend fun createNewPlaylist(playlist: Playlist){
         playlistRepository.createNewPlaylist(playlist)
     }

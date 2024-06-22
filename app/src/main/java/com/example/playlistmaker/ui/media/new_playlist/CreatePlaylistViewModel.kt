@@ -2,13 +2,11 @@ package com.example.playlistmaker.ui.media.new_playlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(private val playlistInteractor: NewPlaylistInteractor): ViewModel() {
-
-
+class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor): ViewModel() {
     fun createNewPlaylist(namePlaylist: String, descriptionPlaylist: String, uri: String, trackIds: MutableList<String>) {
         viewModelScope.launch {
             playlistInteractor.createNewPlaylist(Playlist(
@@ -20,10 +18,7 @@ class NewPlaylistViewModel(private val playlistInteractor: NewPlaylistInteractor
                 size = trackIds.size
             ))
         }
-
     }
-
-
 }
 
 

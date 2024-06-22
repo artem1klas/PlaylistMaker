@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,16 +31,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class NewPlaylistFragment : Fragment() {
+class CreatePlaylistFragment : Fragment() {
 
-    private val viewModel by viewModel<NewPlaylistViewModel>()
-
-
+    private val viewModel by viewModel<CreatePlaylistViewModel>()
     private var _binding: FragmentNewPlaylistBinding? = null
     private val binding get() = _binding!!
-
     private var uri: Uri? = null
-
     private var track: Track? = null
 
 
@@ -56,7 +51,6 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         track = getTrack(requireArguments().getString(SELECTED_TRACK))
 
         binding.arrowBack.setOnClickListener {
@@ -68,18 +62,14 @@ class NewPlaylistFragment : Fragment() {
             } else {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(getString(R.string.finish_creating_a_playlist))
-                    .setNeutralButton(getString(R.string.cancel)){ _, _ ->
+                    .setNeutralButton(getString(R.string.cancel)) { _, _ ->
                     }
-                    .setPositiveButton(getString(R.string.complete)){ _, _ ->
+                    .setPositiveButton(getString(R.string.complete)) { _, _ ->
                         findNavController().navigateUp()
                     }
                     .show()
-
             }
-
-
         }
-
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -124,10 +114,20 @@ class NewPlaylistFragment : Fragment() {
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (!p0.isNullOrEmpty()) {
-                binding.createPlaylist.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.blue))
+                binding.createPlaylist.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.blue
+                    )
+                )
                 binding.createPlaylist.isEnabled = true
             } else {
-                binding.createPlaylist.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.text_gray))
+                binding.createPlaylist.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.text_gray
+                    )
+                )
                 binding.createPlaylist.isEnabled = false
             }
         }
@@ -147,17 +147,16 @@ class NewPlaylistFragment : Fragment() {
         }
 
         val file = File(filePath, name)
-
         val inputStream = requireContext().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
 
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
     }
 
-    private fun getTrack(json: String?) = Gson().fromJson(json, Track::class.java)
+    private fun getTrack(json: String?) =
+        if (json != "-1") Gson().fromJson(json, Track::class.java) else null
 
     override fun onDestroyView() {
         super.onDestroyView()

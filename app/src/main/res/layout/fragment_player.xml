@@ -267,6 +267,13 @@
         app:behavior_peekHeight="240dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+        <View
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:background="@drawable/bottom_sheet_line"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -276,7 +283,7 @@
             android:fontFamily="@font/ys_text_regular"
             android:maxLines="1"
             android:textSize="16sp"
-            android:layout_marginTop="24dp"/>
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:id="@+id/createPlaylistBottomSheet"

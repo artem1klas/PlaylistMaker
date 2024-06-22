@@ -1,26 +1,23 @@
 package com.example.playlistmaker.ui.media.playlists
 
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api_impl.media.playlist.NewPlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.domain.models.TypeError
-import com.example.playlistmaker.ui.media.favoritetracks.FavoriteState
-import com.example.playlistmaker.ui.search.SearchState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PlaylistsViewModel(val newPlaylistInteractor: NewPlaylistInteractor): ViewModel() {
+class PlaylistsViewModel(val playlistInteractor: PlaylistInteractor): ViewModel() {
 
-    private val stateLiveData = MutableLiveData<PlaylistsState>()
+    private val stateLiveData = MutableLiveData<PlaylistsState>(PlaylistsState.Loading)
     fun observeState(): LiveData<PlaylistsState> = stateLiveData
     fun fillData() {
         renderState(PlaylistsState.Loading)
-        viewModelScope.launch {
-            newPlaylistInteractor
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor
                 .getPlaylists()
                 .collect { playlists ->
                     processResult(playlists)
@@ -45,7 +42,7 @@ class PlaylistsViewModel(val newPlaylistInteractor: NewPlaylistInteractor): View
             if (trackAdded()) {
 
             } else {
-                newPlaylistInteractor.addTrackToPlaylist(track, playlist)
+                playlistInteractor.addTrackToPlaylist(track, playlist)
             }
         }
     }

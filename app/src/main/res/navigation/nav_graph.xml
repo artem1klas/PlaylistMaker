@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.playlistmaker.ui.media.new_playlist.NewPlaylistFragment"
+        android:name="com.example.playlistmaker.ui.media.new_playlist.CreatePlaylistFragment"
         android:label="NewPlaylistFragment"
         tools:layout="@layout/fragment_new_playlist"/>
 </navigation>

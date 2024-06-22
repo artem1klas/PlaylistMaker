@@ -5,39 +5,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.models.Playlist
-import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.media.favoritetracks.FavoriteState
-import com.example.playlistmaker.ui.media.favoritetracks.FavoriteTracksFragment
-import com.example.playlistmaker.ui.media.favoritetracks.FavoriteTracksViewModel
-import com.example.playlistmaker.ui.media.new_playlist.NewPlaylistFragment
-import com.example.playlistmaker.ui.player.PlayerFragment
-import com.example.playlistmaker.ui.track.TrackAdapter
-import com.example.playlistmaker.utils.debounce
-import com.google.gson.Gson
+import com.example.playlistmaker.ui.media.new_playlist.CreatePlaylistFragment
+import com.example.playlistmaker.ui.adapters.playlist.PlaylistAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
 
     private val viewModel by viewModel<PlaylistsViewModel>()
-
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var onPlaylistClick: (Playlist) -> Unit
     private val playlists = ArrayList<Playlist>()
-    private val adapter = PlaylistAdapter(playlists)
-
+    private val adapter = PlaylistAdapter(playlists){ playlists ->
+        onPlaylistClick(playlists)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,33 +38,22 @@ class PlaylistsFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.createNewPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_mediaFragment_to_newPlaylistFragment,
-                    NewPlaylistFragment.createArgs("-1")
+                    CreatePlaylistFragment.createArgs("-1")
                 )
-//            NewPlaylistFragment.createArgs(trackId = Gson().toJson(Track(
-//            "r", "r", "r", "r", "r", "r", "r", "r", "r", "r", true)))
-
-
         }
-
-
-
-
 
         binding.playlistsList.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsList.adapter = adapter
 
         viewModel.fillData()
-
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-
+        onPlaylistClick = {}
     }
 
     @SuppressLint("NotifyDataSetChanged")
