@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -40,6 +41,8 @@ class CreatePlaylistFragment : Fragment() {
     private var track: Track? = null
 
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,24 +55,6 @@ class CreatePlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         track = getTrack(requireArguments().getString(SELECTED_TRACK))
-
-        binding.arrowBack.setOnClickListener {
-            if (uri == null
-                && binding.namePlaylist.text.toString().isNullOrEmpty()
-                && binding.descriptionPlaylist.text.toString().isNullOrEmpty()
-            ) {
-                findNavController().navigateUp()
-            } else {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(getString(R.string.finish_creating_a_playlist))
-                    .setNeutralButton(getString(R.string.cancel)) { _, _ ->
-                    }
-                    .setPositiveButton(getString(R.string.complete)) { _, _ ->
-                        findNavController().navigateUp()
-                    }
-                    .show()
-            }
-        }
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -107,6 +92,18 @@ class CreatePlaylistFragment : Fragment() {
             }
             findNavController().navigateUp()
         }
+
+        binding.arrowBack.setOnClickListener {
+            showDialog()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true){
+                override fun handleOnBackPressed() {
+                    showDialog()
+                }
+
+            })
     }
 
     private val textWatcher = object : TextWatcher {
@@ -153,6 +150,24 @@ class CreatePlaylistFragment : Fragment() {
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+    }
+
+    private fun showDialog(){
+        if (uri == null
+            && binding.namePlaylist.text.toString().isNullOrEmpty()
+            && binding.descriptionPlaylist.text.toString().isNullOrEmpty()
+        ) {
+            findNavController().navigateUp()
+        } else {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.finish_creating_a_playlist))
+                .setNeutralButton(getString(R.string.cancel)) { _, _ ->
+                }
+                .setPositiveButton(getString(R.string.complete)) { _, _ ->
+                    findNavController().navigateUp()
+                }
+                .show()
+        }
     }
 
     private fun getTrack(json: String?) =
