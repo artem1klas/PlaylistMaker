@@ -1,9 +1,12 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.data.impl.media.FavoriteTrackRepositoryImpl
 import com.example.playlistmaker.data.converters.TrackDbConvertor
 import com.example.playlistmaker.data.converters.TrackDtoConvertor
-import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackRepository
+import com.example.playlistmaker.data.converters.TrackInPlaylistDbConvertor
+import com.example.playlistmaker.data.impl.media.PlaylistRepositoryImpl
+import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackRepository
 import com.example.playlistmaker.data.impl.player.PlayerRepositoryImpl
 import com.example.playlistmaker.domain.api_impl.player.PlayerRepository
 import com.example.playlistmaker.data.impl.search.HistoryRepositoryImpl
@@ -13,6 +16,7 @@ import com.example.playlistmaker.domain.api_impl.search.SearchRepository
 import com.example.playlistmaker.data.impl.settings.SettingsRepositoryImpl
 import com.example.playlistmaker.domain.api_impl.settings.SettingsRepository
 import com.example.playlistmaker.data.impl.settings.ExternalNavigatorImpl
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistRepository
 import com.example.playlistmaker.domain.api_impl.settings.ExternalNavigator
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -49,6 +53,18 @@ val repositoryModule = module {
 
     single<FavoriteTrackRepository> {
         FavoriteTrackRepositoryImpl(get(), get())
+    }
+
+    factory {
+        PlaylistDbConvertor()
+    }
+
+    factory {
+        TrackInPlaylistDbConvertor()
+    }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get(), get())
     }
 
 }

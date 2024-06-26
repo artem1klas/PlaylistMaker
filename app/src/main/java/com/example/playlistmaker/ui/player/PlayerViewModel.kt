@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.domain.api_impl.media.FavoriteTrackInteractor
+import com.example.playlistmaker.domain.api_impl.media.favorite_track.FavoriteTrackInteractor
+import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistInteractor
 import com.example.playlistmaker.domain.api_impl.player.PlayerInteractor
+import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,7 +18,8 @@ import java.util.Locale
 class PlayerViewModel(
     private val track: Track,
     private val playerInteractor: PlayerInteractor,
-    private val favoriteTrackInteractor: FavoriteTrackInteractor
+    private val favoriteTrackInteractor: FavoriteTrackInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private val dateFormat by lazy {
@@ -25,10 +28,18 @@ class PlayerViewModel(
 
     private var trackIsLicked = false
 
+    private var trackIsAdded = false
+
     private var timerJob: Job? = null
 
     private val playerState =
-        MutableLiveData<PlayerState>(PlayerState.Default(getCurrentPosition(), trackIsLicked))
+        MutableLiveData<PlayerState>(
+            PlayerState.Default(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
 
     fun observeState(): LiveData<PlayerState> = playerState
 
@@ -43,7 +54,6 @@ class PlayerViewModel(
                         trackIsLicked = true
                     }
                 }
-
         }
     }
 
@@ -52,7 +62,13 @@ class PlayerViewModel(
         playerInteractor.prepareAsync()
 
         playerInteractor.setOnPreparedListener {
-            playerState.postValue(PlayerState.Prepared(getCurrentPosition(), trackIsLicked))
+            playerState.postValue(
+                PlayerState.Prepared(
+                    getCurrentPosition(),
+                    trackIsLicked,
+                    trackIsAdded
+                )
+            )
         }
         playerInteractor.setOnCompletionListener {
             timerJob?.cancel()
@@ -95,9 +111,55 @@ class PlayerViewModel(
         trackIsLicked = !trackIsLicked
     }
 
+    fun addButtonClicked() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect {
+                processResult(it)
+            }
+        }
+    }
+
+    fun addTrackToPlaylist(playlist: Playlist): Boolean {
+        if (track.trackId !in playlist.trackIds) {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+            }
+            return true
+        } else {
+            return false
+        }
+
+
+
+    }
+
+    private fun processResult(playlists: List<Playlist>) {
+        playerState.postValue(
+            PlayerState.ButtomSheet(
+                isPlayButtonEnabled = playerState.value!!.isPlayButtonEnabled,
+                isButtonPlay = playerState.value!!.isPlayButtonEnabled,
+                progress = playerState.value!!.progress,
+                isLiked = playerState.value!!.isLiked,
+                isAdded = playerState.value!!.isAdded,
+                playlists = playlists
+            )
+        )
+
+//        trackIds = playlists.map {
+//
+//        }
+
+    }
+
     fun startPlayer() {
         playerInteractor.start()
-        playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked))
+        playerState.postValue(
+            PlayerState.Playing(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
         startTimer()
     }
 
@@ -106,7 +168,13 @@ class PlayerViewModel(
         timerJob = viewModelScope.launch {
             while (playerInteractor.isPlaying()) {
                 delay(DELAY_MILLIS)
-                playerState.postValue(PlayerState.Playing(getCurrentPosition(), trackIsLicked))
+                playerState.postValue(
+                    PlayerState.Playing(
+                        getCurrentPosition(),
+                        trackIsLicked,
+                        trackIsAdded
+                    )
+                )
             }
         }
     }
@@ -114,7 +182,7 @@ class PlayerViewModel(
     fun pausePlayer() {
         playerInteractor.pause()
         timerJob?.cancel()
-        playerState.postValue(PlayerState.Paused(getCurrentPosition(), trackIsLicked))
+        playerState.postValue(PlayerState.Paused(getCurrentPosition(), trackIsLicked, trackIsAdded))
     }
 
     private fun getCurrentPosition(): String {
@@ -124,7 +192,13 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        playerState.postValue(PlayerState.Default(getCurrentPosition(), trackIsLicked))
+        playerState.postValue(
+            PlayerState.Default(
+                getCurrentPosition(),
+                trackIsLicked,
+                trackIsAdded
+            )
+        )
     }
 
     companion object {

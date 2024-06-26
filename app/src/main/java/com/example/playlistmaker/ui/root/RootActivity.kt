@@ -26,7 +26,7 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.playerFragment -> {
+                R.id.playerFragment, R.id.newPlaylistFragment -> {
                     binding.bottomNavigationView.visibility = View.GONE
                 }
 
@@ -36,4 +36,5 @@ class RootActivity : AppCompatActivity() {
             }
         }
     }
+
 }

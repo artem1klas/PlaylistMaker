@@ -18,7 +18,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.track.TrackAdapter
+import com.example.playlistmaker.ui.adapters.track.TrackAdapter
 import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -86,7 +86,7 @@ class SearchFragment : Fragment(){
             render(it)
         }
 
-        onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY_MILLIS, viewLifecycleOwner.lifecycleScope, false) { track ->
+        onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY_MILLIS, viewLifecycleOwner.lifecycleScope, false) { track ->
             viewModel.addHistory(track)
             findNavController().navigate(
                 R.id.action_searchFragment_to_playerFragment,

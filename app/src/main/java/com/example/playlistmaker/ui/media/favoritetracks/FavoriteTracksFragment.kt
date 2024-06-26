@@ -14,7 +14,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.ui.track.TrackAdapter
+import com.example.playlistmaker.ui.adapters.track.TrackAdapter
 import com.example.playlistmaker.utils.debounce
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel

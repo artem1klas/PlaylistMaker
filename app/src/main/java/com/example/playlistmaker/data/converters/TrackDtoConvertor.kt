@@ -1,7 +1,6 @@
 package com.example.playlistmaker.data.converters
 
 import android.icu.text.SimpleDateFormat
-import com.example.playlistmaker.data.db.TrackEntity
 import com.example.playlistmaker.data.dto.TrackDto
 import com.example.playlistmaker.domain.models.Track
 import java.util.Locale
