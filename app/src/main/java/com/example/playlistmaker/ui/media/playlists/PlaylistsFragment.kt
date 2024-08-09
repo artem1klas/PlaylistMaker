@@ -14,6 +14,7 @@ import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.ui.media.new_playlist.CreatePlaylistFragment
 import com.example.playlistmaker.ui.adapters.playlist.PlaylistAdapter
+import com.example.playlistmaker.ui.playlist.PlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -53,7 +54,12 @@ class PlaylistsFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        onPlaylistClick = {}
+        onPlaylistClick = {
+            findNavController().navigate(
+                R.id.action_mediaFragment_to_playlistFragment,
+                PlaylistFragment.createArgs(it.id)
+            )
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
