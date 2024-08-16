@@ -4,15 +4,22 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface PlaylistRepository{
+interface PlaylistRepository {
     suspend fun createNewPlaylist(playlist: Playlist)
 
     fun getPlaylists(): Flow<List<Playlist>>
 
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)
 
-   fun getPlaylist(id: Int): Flow<Playlist>
+    suspend fun addOnlyTrack(track: Track)
 
-   fun getTracksInPlaylist(idsTracks: List<Int>): Flow<List<Track>>
+    fun getPlaylist(id: Int): Flow<Playlist>
+
+    fun getTracksInPlaylist(idsTracks: List<Int>): Flow<List<Track>>
+
+    suspend fun updatePlaylist(playlist: Playlist)
+
+    suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String)
+
 
 }

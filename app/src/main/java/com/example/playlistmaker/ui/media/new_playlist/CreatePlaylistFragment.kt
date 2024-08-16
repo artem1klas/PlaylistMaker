@@ -79,13 +79,13 @@ class CreatePlaylistFragment : Fragment() {
                 "Плейлист ${binding.namePlaylist.text} создан",
                 Toast.LENGTH_LONG
             ).show()
-            val trackIds = if (track != null) mutableListOf(track!!.trackId) else mutableListOf()
+
 
             viewModel.createNewPlaylist(
                 binding.namePlaylist.text.toString(),
                 binding.descriptionPlaylist.text.toString(),
                 uri.toString(),
-                trackIds
+                track
             )
             if (uri != null) {
                 saveImageToPrivateStorage(binding.namePlaylist.text.toString(), uri!!)

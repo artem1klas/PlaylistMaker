@@ -7,25 +7,37 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.utils.dpToPx
+import com.example.playlistmaker.ui.adapters.track.TrackAdapter
+import com.example.playlistmaker.ui.player.PlayerFragment
+import com.example.playlistmaker.utils.debounce
+import com.example.playlistmaker.utils.declineMinute
+import com.example.playlistmaker.utils.declineTrack
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
 
     private val viewModel by viewModel<PlaylistViewModel>()
     private var _binding: FragmentPlaylistBinding? = null
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
     private val binding get() = _binding!!
 
     private lateinit var playlist: Playlist
-    private val tracks = mutableListOf<Track>()
+    private val tracks = ArrayList<Track>()
+    private val adapter = TrackAdapter(tracks) { track ->
+        onTrackClickDebounce(track)
+    }
 
 
     override fun onCreateView(
@@ -42,32 +54,81 @@ class PlaylistFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-        viewModel.getPlaylist(requireArguments().getInt(SELECTED_PLAYLIST))
+
+        binding.tracks.adapter = adapter
+        binding.tracks.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter.onClickLong = {
+            showDeleteDialog(playlist, it.trackId)
+        }
+
+
+
+        viewModel.fillData(requireArguments().getInt(SELECTED_PLAYLIST))
 
         binding.buttonBack.setOnClickListener {
             findNavController().navigateUp()
         }
 
+        onTrackClickDebounce = debounce(
+            CLICK_DEBOUNCE_DELAY_MILLIS,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { track ->
+            findNavController().navigate(
+                R.id.action_playlistFragment_to_playerFragment,
+                PlayerFragment.createArgs(trackId = Gson().toJson(track))
+            )
+        }
+
     }
 
-    fun render(state: PlaylistState){
-        when(state){
+
+    private fun showDeleteDialog(playlist: Playlist, trackId: String) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Хотите удалить трек?")
+            .setNegativeButton("Нет") { _, _ -> }
+            .setPositiveButton("Да") { _, _ ->
+
+                val position = tracks.indexOfFirst {
+                    it.trackId == trackId
+                }
+                if (position != -1) {
+                    tracks.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                }
+
+                viewModel.deleteTrackFromPlaylist(playlist, trackId)
+
+
+            }
+            .show()
+    }
+
+
+
+    fun render(state: PlaylistState) {
+        when (state) {
             is PlaylistState.Loading -> {
                 binding.mainGroup.isVisible = false
                 binding.albumBottomSheet.isVisible = false
                 binding.progressBar.isVisible = true
             }
+
             is PlaylistState.Content -> {
                 playlist = state.playlist
+                tracks.clear()
+                tracks.addAll(state.tracks)
                 bind(playlist)
                 binding.mainGroup.isVisible = true
                 binding.albumBottomSheet.isVisible = true
                 binding.progressBar.isVisible = false
+                adapter.notifyDataSetChanged()
             }
         }
     }
 
-    fun bind(playlist: Playlist){
+    fun bind(playlist: Playlist) {
         Glide.with(requireContext())
             .load(playlist.uri)
             .placeholder(R.drawable.image_placeholdertrack)
@@ -75,8 +136,7 @@ class PlaylistFragment : Fragment() {
             .into(binding.image)
         binding.title.text = playlist.namePlaylist
         binding.description.text = playlist.descriptionPlaylist
-        binding.durationAndCount.text = playlist.size.toString()
-        tracks.clear()
+        binding.durationAndCount.text = getDurationAndCount(tracks)
 
 
     }
@@ -87,8 +147,35 @@ class PlaylistFragment : Fragment() {
         _binding = null
     }
 
+    fun getDurationAndCount(tracks: List<Track>): String {
+        val totalDuration = tracks.map { track ->
+            val time = track.trackTimeMillis.split(":").map { it.toInt() }
+            time[0] * 60 + time[1]
+        }.sum() / 60
+
+        val tracksCount = tracks.size
+        return "$tracksCount ${
+            declineTrack(
+                requireContext(),
+                tracksCount
+            )
+        } $totalDuration ${declineMinute(requireContext(), totalDuration)}"
+    }
+
+//    fun getTotalDuration(tracks: List<Track>): String {
+//        val totalDuration = tracks.map{ track ->
+//            val time = track.trackTimeMillis.split(":").map { it.toInt() }
+//            time[0]*60 + time[1]
+//        }.sum()/60
+//        return "$totalDuration ${declineMinute(requireContext(), totalDuration)}"
+//    }
+
+
     companion object {
         const val SELECTED_PLAYLIST = "selected_playlist"
+
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
+
 
         fun createArgs(albumId: Int): Bundle = bundleOf(SELECTED_PLAYLIST to albumId)
     }

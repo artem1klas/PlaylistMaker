@@ -23,3 +23,14 @@ fun declineTrack(context: Context, num: Int): String {
     }
 }
 
+fun declineMinute(context: Context, num: Int): String {
+    if(num % 100 / 10 == 1){
+        return "минут"
+    }
+    return when(num % 10){
+        1 -> "минута"
+        in 2..4 -> "минуты"
+        else -> "минут"
+    }
+}
+
