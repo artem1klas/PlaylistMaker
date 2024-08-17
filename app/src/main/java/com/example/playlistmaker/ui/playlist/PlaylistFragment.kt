@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import com.example.playlistmaker.ui.player.PlayerFragment
 import com.example.playlistmaker.utils.debounce
 import com.example.playlistmaker.utils.declineMinute
 import com.example.playlistmaker.utils.declineTrack
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,14 +57,13 @@ class PlaylistFragment : Fragment() {
             render(it)
         }
 
+
         binding.tracks.adapter = adapter
         binding.tracks.layoutManager = LinearLayoutManager(requireContext())
 
         adapter.onClickLong = {
-            showDeleteDialog(playlist, it.trackId)
+            showDeleteTrackDialog(playlist, it.trackId)
         }
-
-
 
         viewModel.fillData(requireArguments().getInt(SELECTED_PLAYLIST))
 
@@ -81,10 +82,102 @@ class PlaylistFragment : Fragment() {
             )
         }
 
+        binding.share.setOnClickListener {
+            if (tracks.isEmpty()){
+                Toast.makeText(requireContext(), "В этом плейлисте нет списка треков, которым можно поделиться", Toast.LENGTH_LONG).show()
+            } else {
+                viewModel.sharePlaylist(playlist.toText())
+            }
+        }
+
+        val bottomSheetBehaviorTracks = BottomSheetBehavior.from(binding.tracksBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        bottomSheetBehaviorTracks.peekHeight = (resources.displayMetrics.heightPixels * 0.25).toInt()
+
+        val bottomSheetBehaviorMenu = BottomSheetBehavior.from(binding.menuBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+
+        bottomSheetBehaviorMenu.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback(){
+                override fun onStateChanged(p0: View, p1: Int) {
+                    when (p1) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            bottomSheetBehaviorTracks.isHideable = false
+                            binding.tracksBottomSheet.visibility = View.VISIBLE
+                            binding.overlay.isVisible = false
+                        }
+                        else -> {
+                            bottomSheetBehaviorTracks.isHideable = true
+                            bottomSheetBehaviorTracks.state = BottomSheetBehavior.STATE_HIDDEN
+                            binding.tracksBottomSheet.visibility = View.GONE
+                            binding.overlay.isVisible = true
+                        }
+                    }
+                }
+
+                override fun onSlide(p0: View, p1: Float) {}
+
+            }
+        )
+
+        binding.menu.setOnClickListener {
+            bottomSheetBehaviorMenu.state =BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        binding.menuShare.setOnClickListener {
+            if (tracks.isEmpty()){
+                Toast.makeText(requireContext(), "В этом плейлисте нет списка треков, которым можно поделиться", Toast.LENGTH_LONG).show()
+            } else {
+                viewModel.sharePlaylist(playlist.toText())
+            }
+        }
+
+        binding.menuDelete.setOnClickListener {
+
+        }
+
+
+
+
+
+
+    }
+
+    fun Playlist.toText(): String {
+        val stringBuilder = StringBuilder()
+            .append(namePlaylist)
+            .append("\n")
+            .append(if (descriptionPlaylist.isNotBlank()) "$descriptionPlaylist \n" else "")
+            .append("${size} ${declineTrack(requireContext(), size)}")
+            .append("\n")
+
+        for ((index, track) in tracks.withIndex()) {
+            stringBuilder.append("${index + 1}.${track.artistName} - ${track.trackName} (${track.trackTimeMillis})\n")
+        }
+        return stringBuilder.toString()
+    }
+
+    private fun showDeletePlaylistDialog(playlist: Playlist) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Хотите удалить плейлист \"${playlist.namePlaylist}\"?")
+            .setNegativeButton("Нет") { _, _ -> }
+            .setPositiveButton("Да") { _, _ ->
+
+
+                viewModel.deletePlaylist(playlist)
+                findNavController().navigateUp()
+
+            }
+            .show()
     }
 
 
-    private fun showDeleteDialog(playlist: Playlist, trackId: String) {
+
+
+    private fun showDeleteTrackDialog(playlist: Playlist, trackId: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage("Хотите удалить трек?")
             .setNegativeButton("Нет") { _, _ -> }
@@ -111,7 +204,7 @@ class PlaylistFragment : Fragment() {
         when (state) {
             is PlaylistState.Loading -> {
                 binding.mainGroup.isVisible = false
-                binding.albumBottomSheet.isVisible = false
+                binding.tracksBottomSheet.isVisible = false
                 binding.progressBar.isVisible = true
             }
 
@@ -121,7 +214,7 @@ class PlaylistFragment : Fragment() {
                 tracks.addAll(state.tracks)
                 bind(playlist)
                 binding.mainGroup.isVisible = true
-                binding.albumBottomSheet.isVisible = true
+                binding.tracksBottomSheet.isVisible = true
                 binding.progressBar.isVisible = false
                 adapter.notifyDataSetChanged()
             }
@@ -138,6 +231,13 @@ class PlaylistFragment : Fragment() {
         binding.description.text = playlist.descriptionPlaylist
         binding.durationAndCount.text = getDurationAndCount(tracks)
 
+        Glide.with(requireContext())
+            .load(playlist.uri)
+            .placeholder(R.drawable.image_placeholdertrack)
+            .transform(CenterCrop())
+            .into(binding.menuPlaylistImage)
+        binding.menuPlaylistName.text = playlist.namePlaylist
+        binding.menuPlaylistSize.text = "${playlist.size} ${declineTrack(requireContext(), playlist.size)}"
 
     }
 
@@ -161,14 +261,6 @@ class PlaylistFragment : Fragment() {
             )
         } $totalDuration ${declineMinute(requireContext(), totalDuration)}"
     }
-
-//    fun getTotalDuration(tracks: List<Track>): String {
-//        val totalDuration = tracks.map{ track ->
-//            val time = track.trackTimeMillis.split(":").map { it.toInt() }
-//            time[0]*60 + time[1]
-//        }.sum()/60
-//        return "$totalDuration ${declineMinute(requireContext(), totalDuration)}"
-//    }
 
 
     companion object {

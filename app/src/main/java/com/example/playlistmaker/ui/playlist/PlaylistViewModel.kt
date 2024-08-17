@@ -5,26 +5,32 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.api_impl.media.playlist.PlaylistInteractor
+import com.example.playlistmaker.domain.api_impl.settings.SharingInteractor
 import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.utils.declineTrack
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.Util
 
-class PlaylistViewModel(private val playlistInteractor: PlaylistInteractor): ViewModel() {
+class PlaylistViewModel(
+    private val playlistInteractor: PlaylistInteractor,
+    private val sharingInteractor: SharingInteractor
+) : ViewModel() {
 
 
     private val liveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 
     fun observeState(): LiveData<PlaylistState> = liveData
 
-    fun fillData(id: Int){
+    fun fillData(id: Int) {
         var playlist: Playlist? = null
         var tracks = listOf<Track>()
         val playlistAsync = viewModelScope.async(Dispatchers.IO) {
             playlistInteractor.getPlaylist(id)
-                .collect{
+                .collect {
                     playlist = it
                 }
         }
@@ -32,33 +38,41 @@ class PlaylistViewModel(private val playlistInteractor: PlaylistInteractor): Vie
             playlistAsync.await()
         }
         val tracksAsync = viewModelScope.async(Dispatchers.IO) {
-            playlistInteractor.getTracksInPlaylist(playlist?.trackIds?.toMutableList() ?: mutableListOf())
-                .collect{
-                tracks = it
-            }
+            playlistInteractor.getTracksInPlaylist(
+                playlist?.trackIds?.toMutableList() ?: mutableListOf()
+            )
+                .collect {
+                    tracks = it
+                }
         }
-       runBlocking {
-           tracksAsync.await()
-       }
+        runBlocking {
+            tracksAsync.await()
+        }
 
-        if (playlist != null){
+        if (playlist != null) {
             renderState(PlaylistState.Content(playlist!!, tracks))
         }
     }
 
-    fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String){
+    fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            playlist.size --
+            playlist.size--
             playlist.trackIds.remove(trackId)
-//            playlistInteractor.updatePlaylist(playlist)
             playlistInteractor.deleteTrackFromPlaylist(playlist, trackId)
-
-//            viewModelScope.launch(Dispatchers.IO) {
-//
-//            }
 
         }
     }
+
+    fun deletePlaylist(playlist: Playlist) {
+
+    }
+
+
+    fun sharePlaylist(text: String) {
+        sharingInteractor.shareText(text)
+    }
+
+
 
 //    fun deleteTrack(trackId: String) {
 //        val async =
@@ -76,7 +90,6 @@ class PlaylistViewModel(private val playlistInteractor: PlaylistInteractor): Vie
 //    override suspend fun getIdTrackInPlaylists(idTrack: String): Flow<List<String>> {
 //        return playlistRepository.getIdTrackInPlaylists(idTrack)
 //    }
-
 
 
 //    fun getPlaylist(id: Int){

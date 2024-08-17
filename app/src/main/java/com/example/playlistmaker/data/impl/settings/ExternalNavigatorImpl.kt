@@ -19,6 +19,17 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         }
     }
 
+    override fun shareText(text: String) {
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, text)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (resolveActivity(context.packageManager) != null) {
+                context.startActivity(this)
+            }
+        }
+    }
+
     override fun openLink() {
         Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.https_offer))).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
