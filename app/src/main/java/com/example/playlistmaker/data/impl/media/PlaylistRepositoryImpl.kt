@@ -36,6 +36,8 @@ class PlaylistRepositoryImpl(
         appDatabase.playlistDao().addTrackToPlaylist(trackInPlaylistDbConvertor.map(track))
     }
 
+
+
     override fun getPlaylist(id: Int): Flow<Playlist> = flow {
         val playlist = appDatabase.playlistDao().getPlaylist(id)
         emit(playlistDbConvertor.map(playlist))
@@ -55,6 +57,16 @@ class PlaylistRepositoryImpl(
         val ids = convertFromPlaylistEntity(appDatabase.playlistDao().getPlaylists()).map{it.trackIds}.flatten()
         if(!ids.contains(trackId)){
             appDatabase.playlistDao().deteteTrackFromPlaylist(trackId)
+        }
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        appDatabase.playlistDao().deletePlaylist(playlistDbConvertor.map(playlist))
+        val ids = convertFromPlaylistEntity(appDatabase.playlistDao().getPlaylists()).map{it.trackIds}.flatten()
+        for(trackId in playlist.trackIds){
+            if (!ids.contains(trackId)){
+                appDatabase.playlistDao().deteteTrackFromPlaylist(trackId)
+            }
         }
     }
 

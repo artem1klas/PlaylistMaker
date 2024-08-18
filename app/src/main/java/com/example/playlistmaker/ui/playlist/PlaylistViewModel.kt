@@ -64,7 +64,9 @@ class PlaylistViewModel(
     }
 
     fun deletePlaylist(playlist: Playlist) {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor.deletePlaylist(playlist)
+        }
     }
 
 

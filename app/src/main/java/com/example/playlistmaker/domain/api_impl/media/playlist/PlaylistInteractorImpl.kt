@@ -22,6 +22,10 @@ class PlaylistInteractorImpl(val playlistRepository: PlaylistRepository):
         playlistRepository.addOnlyTrack(track)
     }
 
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        playlistRepository.deletePlaylist(playlist)
+    }
+
     override fun getPlaylist(id: Int): Flow<Playlist> {
         return playlistRepository.getPlaylist(id)
     }

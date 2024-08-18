@@ -7,7 +7,7 @@ import com.example.playlistmaker.domain.models.Playlist
 import com.example.playlistmaker.domain.models.Track
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor): ViewModel() {
+open class CreatePlaylistViewModel(private val playlistInteractor: PlaylistInteractor): ViewModel() {
     fun createNewPlaylist(namePlaylist: String, descriptionPlaylist: String, uri: String, track: Track?) {
         val trackIds = if (track != null) mutableListOf(track!!.trackId) else mutableListOf()
         val playlist = Playlist(

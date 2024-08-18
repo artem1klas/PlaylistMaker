@@ -21,5 +21,9 @@ interface PlaylistRepository {
 
     suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String)
 
+    suspend fun deletePlaylist(playlist: Playlist)
+
+
+
 
 }

@@ -22,4 +22,6 @@ interface PlaylistInteractor{
 
     suspend fun addOnlyTrack(track: Track)
 
+    suspend fun deletePlaylist(playlist: Playlist)
+
 }

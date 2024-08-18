@@ -136,7 +136,13 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.menuDelete.setOnClickListener {
+            showDeletePlaylistDialog(playlist)
+        }
 
+        binding.menuEdit.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_playlistFragment_to_editPlaylistFragment
+            )
         }
 
 
