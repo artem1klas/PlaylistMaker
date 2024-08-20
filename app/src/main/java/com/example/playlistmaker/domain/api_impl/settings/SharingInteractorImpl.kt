@@ -1,9 +1,6 @@
 package com.example.playlistmaker.domain.api_impl.settings
 
 class SharingInteractorImpl(private val externalNavigator: ExternalNavigator) : SharingInteractor {
-    override fun shareApp() {
-        externalNavigator.shareLink()
-    }
 
     override fun shareText(text: String) {
         externalNavigator.shareText(text)

@@ -20,11 +20,9 @@ class PlaylistViewModel(
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
 
-
     private val liveData = MutableLiveData<PlaylistState>(PlaylistState.Loading)
 
     fun observeState(): LiveData<PlaylistState> = liveData
-
     fun fillData(id: Int) {
         var playlist: Playlist? = null
         var tracks = listOf<Track>()
@@ -59,7 +57,6 @@ class PlaylistViewModel(
             playlist.size--
             playlist.trackIds.remove(trackId)
             playlistInteractor.deleteTrackFromPlaylist(playlist, trackId)
-
         }
     }
 
@@ -69,44 +66,9 @@ class PlaylistViewModel(
         }
     }
 
-
     fun sharePlaylist(text: String) {
         sharingInteractor.shareText(text)
     }
-
-
-
-//    fun deleteTrack(trackId: String) {
-//        val async =
-//    }
-
-
-//    override suspend fun addIdsPlaylistAndTrack(ids: IdsPlaylistAndTrack) {
-//        playlistRepository.addIdsPlaylistAndTrack(ids)
-//    }
-//
-//    override suspend fun deleteIdsPlaylistAndTrack(ids: IdsPlaylistAndTrack) {
-//        playlistRepository.deleteIdsPlaylistAndTrack(ids)
-//    }
-//
-//    override suspend fun getIdTrackInPlaylists(idTrack: String): Flow<List<String>> {
-//        return playlistRepository.getIdTrackInPlaylists(idTrack)
-//    }
-
-
-//    fun getPlaylist(id: Int){
-//        viewModelScope.launch {
-//            playlistInteractor.getPlaylist(id)
-//                .collect{
-//                        playlist ->
-//                    processResult(playlist)
-//                }
-//        }
-//    }
-
-//    private fun processResult(playlist: Playlist) {
-//        renderState(PlaylistState.Content(playlist))
-//    }
 
     private fun renderState(state: PlaylistState) {
         liveData.postValue(state)

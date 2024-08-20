@@ -40,9 +40,6 @@ open class CreatePlaylistFragment : Fragment() {
     protected var uri: Uri? = null
     private var track: Track? = null
 
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,11 +54,12 @@ open class CreatePlaylistFragment : Fragment() {
         track = getTrack(requireArguments().getString(SELECTED_TRACK))
 
         val pickMedia =
-            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    this.uri = uri
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { localUri ->
+                if (localUri != null) {
+                    uri = localUri
+
                     Glide.with(requireContext())
-                        .load(uri)
+                        .load(localUri)
                         .transform(CenterCrop(), RoundedCorners(dpToPx(8f, requireContext())))
                         .into(binding.newPlayListImage)
                 }
@@ -74,23 +72,22 @@ open class CreatePlaylistFragment : Fragment() {
         binding.namePlaylist.addTextChangedListener(textWatcher)
 
         binding.createPlaylist.setOnClickListener {
-            Toast.makeText(
-                context,
-                "Плейлист ${binding.namePlaylist.text} создан",
-                Toast.LENGTH_LONG
-            ).show()
-
-
+            if (uri != null) {
+                uri = saveImageToPrivateStorage(uri!!)
+            }
             viewModel.createNewPlaylist(
                 binding.namePlaylist.text.toString(),
                 binding.descriptionPlaylist.text.toString(),
                 uri.toString(),
                 track
             )
-            if (uri != null) {
-                saveImageToPrivateStorage(binding.namePlaylist.text.toString(), uri!!)
-            }
             findNavController().navigateUp()
+            Toast.makeText(
+                context,
+                getString(R.string.playlist_is_created, binding.namePlaylist.text),
+                Toast.LENGTH_LONG
+            ).show()
+
         }
 
         binding.arrowBack.setOnClickListener {
@@ -133,7 +130,7 @@ open class CreatePlaylistFragment : Fragment() {
 
     }
 
-    fun saveImageToPrivateStorage(name: String, uri: Uri) {
+    fun saveImageToPrivateStorage(previewUri: Uri) : Uri? {
         val filePath = File(
             requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "playlistImages"
@@ -143,16 +140,18 @@ open class CreatePlaylistFragment : Fragment() {
             filePath.mkdirs()
         }
 
-        val file = File(filePath, name)
-        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        val file = File(filePath, "${System.currentTimeMillis()}.jpg")
+        val inputStream = requireContext().contentResolver.openInputStream(previewUri)
         val outputStream = FileOutputStream(file)
 
         BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+
+        return Uri.fromFile(file)
     }
 
-    private fun showDialog(){
+    fun showDialog(){
         if (uri == null
             && binding.namePlaylist.text.toString().isNullOrEmpty()
             && binding.descriptionPlaylist.text.toString().isNullOrEmpty()
