@@ -197,6 +197,7 @@ class PlaylistFragment : Fragment() {
                     adapter.notifyItemRemoved(position)
                 }
                 binding.durationAndCount.text = getDurationAndCount(tracks)
+                showNoTrackMessage()
                 viewModel.deleteTrackFromPlaylist(playlist, trackId)
             }
             .show()
@@ -240,7 +241,18 @@ class PlaylistFragment : Fragment() {
         binding.menuPlaylistName.text = playlist.namePlaylist
         binding.menuPlaylistSize.text =
             "${playlist.size} ${declineTrack(requireContext(), playlist.size)}"
+        showNoTrackMessage()
 
+
+    }
+
+    private fun showNoTrackMessage(){
+        if (tracks.isEmpty()){
+            binding.noTracksInPlaylist.isVisible = true
+        }
+        else {
+            binding.noTracksInPlaylist.isVisible = false
+        }
     }
 
     override fun onDestroyView() {

@@ -99,7 +99,6 @@ open class CreatePlaylistFragment : Fragment() {
                 override fun handleOnBackPressed() {
                     showDialog()
                 }
-
             })
     }
 

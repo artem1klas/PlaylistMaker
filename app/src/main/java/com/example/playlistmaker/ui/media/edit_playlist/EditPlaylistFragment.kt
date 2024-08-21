@@ -82,6 +82,12 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
         binding.arrowBack.setOnClickListener {
             findNavController().navigateUp()
         }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true){
+                override fun handleOnBackPressed() {
+                    findNavController().navigateUp()
+                }
+            })
     }
 
     companion object {

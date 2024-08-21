@@ -52,4 +52,5 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="playlist_is_created">Плейлист %1$s создан</string>
+    <string name="no_tracks_have_been_added_to_the_playlist_yet">В плейлист еще не добавлен\n ни один трек</string>
 </resources>
