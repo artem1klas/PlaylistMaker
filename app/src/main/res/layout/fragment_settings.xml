@@ -26,7 +26,7 @@
 
         <TextView
             style="@style/settings_frame_text"
-            android:text="@string/share" />
+            android:text="@string/share_app" />
 
         <Button
             android:id="@+id/buttonShare"

@@ -33,7 +33,7 @@
         style="@style/top_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Новый плейлист"
+        android:text="@string/new_playlist"
         app:layout_constraintStart_toEndOf="@id/arrowBack"
         app:layout_constraintBaseline_toBaselineOf="@id/arrowBack"/>
 

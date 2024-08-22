@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.playlistmaker.R
 import com.example.playlistmaker.utils.App
 import com.example.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -38,7 +39,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.buttonShare.setOnClickListener {
-            viewModel.shareApp()
+            viewModel.shareApp(getString(R.string.https_yandex_ad))
         }
 
         binding.buttonSupport.setOnClickListener {

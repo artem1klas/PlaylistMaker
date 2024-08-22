@@ -127,6 +127,15 @@
         <item name="android:textSize">12sp</item>
         <item name="itemTextColor">@color/bottomnavigation_element</item>
         <item name="itemIconTint">@color/bottomnavigation_element</item>
+    </style>
 
+    <style name="playlist_buttons_of_menu">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/color_text</item>
+        <item name="android:fontFamily">@font/ys_text_regular</item>
+        <item name="android:layout_marginHorizontal">16dp</item>
+        <item name="android:layout_marginVertical">21dp</item>
     </style>
 </resources>

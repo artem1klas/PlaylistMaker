@@ -8,10 +8,10 @@ import com.example.playlistmaker.domain.api_impl.settings.ExternalNavigator
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 
-    override fun shareLink() {
+    override fun shareText(text: String) {
         Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, context.getString(R.string.https_yandex_ad))
+            putExtra(Intent.EXTRA_TEXT, text)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             if (resolveActivity(context.packageManager) != null) {
                 context.startActivity(this)

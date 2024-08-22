@@ -25,8 +25,8 @@ class SettingsViewModel(
         settingsInteractor.updateThemeSetting(isChecked)
     }
 
-    fun shareApp() {
-        sharingInteractor.shareApp()
+    fun shareApp(link: String) {
+        sharingInteractor.shareText(link)
     }
     fun openTerms() {
         sharingInteractor.openTerms()

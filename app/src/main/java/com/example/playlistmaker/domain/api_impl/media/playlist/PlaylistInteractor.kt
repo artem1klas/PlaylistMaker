@@ -11,4 +11,17 @@ interface PlaylistInteractor{
     fun getPlaylists(): Flow<List<Playlist>>
 
     suspend fun addTrackToPlaylist(track: Track, playlist: Playlist)
+
+    fun getPlaylist(id: Int): Flow<Playlist>
+
+    fun getTracksInPlaylist(idsTracks: MutableList<String>): Flow<List<Track>>
+
+    suspend fun updatePlaylist(playlist: Playlist)
+
+    suspend fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String)
+
+    suspend fun addOnlyTrack(track: Track)
+
+    suspend fun deletePlaylist(playlist: Playlist)
+
 }
