@@ -261,13 +261,13 @@ class PlaylistFragment : Fragment() {
     }
 
     fun getDurationAndCount(tracks: List<Track>): String {
-        val totalDuration = tracks.map { track ->
+        val totalDurationInMinute = tracks.map { track ->
             val time = track.trackTimeMillis.split(":").map { it.toInt() }
-            time[0] * 60 + time[1]
+            time[0] * SECONDS_IN_MINUTE + time[1]
         }.sum() / 60
 
         val tracksCount = tracks.size
-        return "$totalDuration ${declineMinute(requireContext(), totalDuration)} • $tracksCount ${
+        return "$totalDurationInMinute ${declineMinute(requireContext(), totalDurationInMinute)} • $tracksCount ${
             declineTrack(
                 requireContext(),
                 tracksCount
@@ -276,6 +276,7 @@ class PlaylistFragment : Fragment() {
     }
 
     companion object {
+        const val SECONDS_IN_MINUTE = 60
         const val SELECTED_PLAYLIST = "selected_playlist"
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
         fun createArgs(albumId: Int): Bundle = bundleOf(SELECTED_PLAYLIST to albumId)

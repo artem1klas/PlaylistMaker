@@ -27,8 +27,9 @@ class PlaylistRepositoryImpl(
 
     override suspend fun addTrackToPlaylist(track: Track, playlist: Playlist) {
         playlist.trackIds.add(track.trackId)
-        playlist.size += 1
-        appDatabase.playlistDao().addPlaylist(playlistDbConvertor.map(playlist))
+        appDatabase.playlistDao().addPlaylist(playlistDbConvertor.map(playlist.copy(
+                    size = playlist.size + 1
+        )))
         appDatabase.playlistDao().addTrackToPlaylist(trackInPlaylistDbConvertor.map(track))
     }
 

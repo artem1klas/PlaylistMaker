@@ -54,9 +54,10 @@ class PlaylistViewModel(
 
     fun deleteTrackFromPlaylist(playlist: Playlist, trackId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            playlist.size--
             playlist.trackIds.remove(trackId)
-            playlistInteractor.deleteTrackFromPlaylist(playlist, trackId)
+            playlistInteractor.deleteTrackFromPlaylist(playlist.copy(
+                size = playlist.size - 1
+            ), trackId)
         }
     }
 

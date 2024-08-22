@@ -2,9 +2,9 @@ package com.example.playlistmaker.domain.models
 
 data class Playlist(
     val id: Int,
-    var namePlaylist: String,
-    var descriptionPlaylist: String,
-    var uri: String,
-    var trackIds: MutableList<String>,
-    var size: Int
+    val namePlaylist: String,
+    val descriptionPlaylist: String,
+    val uri: String,
+    val trackIds: MutableList<String>,
+    val size: Int
 )

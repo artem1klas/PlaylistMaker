@@ -45,7 +45,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image"
-            tools:text="Title" />
+            tools:text="[Title]" />
 
         <TextView
             android:id="@+id/description"
@@ -61,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Description" />
+            tools:text="[Description]" />
 
         <TextView
             android:id="@+id/durationAndCount"
@@ -70,7 +70,7 @@
             android:layout_marginHorizontal="@dimen/contur_margin"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/ys_text_regular"
-            android:text="Long and Count tracks"
+            tools:text="[Long and Count tracks]"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -194,7 +194,7 @@
                     android:maxLines="1"
                     android:textColor="@color/color_text"
                     android:textSize="16sp"
-                    tools:text="trackName" />
+                    tools:text="[trackName]" />
 
                 <TextView
                     android:id="@+id/menu_playlistSize"
@@ -206,7 +206,7 @@
                     android:maxLines="1"
                     android:textColor="@color/color_text_another"
                     android:textSize="11sp"
-                    tools:text="trackName" />
+                    tools:text="[trackName]" />
 
 
             </LinearLayout>

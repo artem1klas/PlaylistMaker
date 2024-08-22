@@ -37,9 +37,13 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
 
         binding.namePlaylist.setText(playlist.namePlaylist)
         binding.descriptionPlaylist.setText(playlist.descriptionPlaylist)
+        if (playlist.uri.isNotBlank()){
+            uriEdit = playlist.uri.toUri()
+        }
 
         Glide.with(requireContext())
             .load(playlist.uri.toUri())
+            .placeholder(R.drawable.ic_new_playlist)
             .transform(CenterCrop(), RoundedCorners(dpToPx(8f, requireContext())))
             .into(binding.newPlayListImage)
 
@@ -47,8 +51,6 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
                     uriEdit = uri
-
-                    binding.newPlayListImage.setImageURI(uri)
 
                     Glide.with(requireContext())
                         .load(uri)
@@ -62,7 +64,7 @@ class EditPlaylistFragment : CreatePlaylistFragment() {
         }
 
         binding.createPlaylist.setOnClickListener {
-            if (uriEdit != null) {
+            if (uriEdit != playlist.uri.toUri()) {
                 uriEdit = saveImageToPrivateStorage(uriEdit!!)
             }
             val newPlaylist = Playlist(
